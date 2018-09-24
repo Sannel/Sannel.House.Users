@@ -9,8 +9,8 @@ services:
     environment:
       - ASPNETCORE_URLS=https://+:443
     volumes:
-      - "./src/Sannel.House.Users/app_config:/app/app_config"
-      - "./src/Sannel.House.Users/app_data:/app/app_data"
+      - "./src/Sannel.House.Users/app_config:c:/app/app_config"
+      - "./src/Sannel.House.Users/app_data:c:/app/app_data"
     labels:
       org.shabadu.hostname: "users.house.dev.local"
       org.shabadu.cert: "src/Sannel.House.Users/app_config/house.dev.local.cer"
