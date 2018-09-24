@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{EDB22547-363D-41E7-98A1-81D5949652D6}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E68F0A90-7CF3-423B-A5F1-79917C3BCC64}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sannel.House.Users.Data.Sqlite", "src\Migrations\Sannel.House.Users.Data.Sqlite\Sannel.House.Users.Data.Sqlite.csproj", "{152DAC69-E1D1-41F3-949F-832C950019F3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sannel.House.Users.Data.SqlServer", "src\Migrations\Sannel.House.Users.Data.SqlServer\Sannel.House.Users.Data.SqlServer.csproj", "{7F91EA68-AA33-483F-A655-630B731961FB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sannel.House.Users", "src\Sannel.House.Users\Sannel.House.Users.csproj", "{6BC52C50-AEF8-470E-BEC9-CE67B365FFE5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sannel.House.Users.Data", "src\Sannel.House.Users.Data\Sannel.House.Users.Data.csproj", "{BD91A1A5-3EAD-430E-84AD-9A972934784D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E68F0A90-7CF3-423B-A5F1-79917C3BCC64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E68F0A90-7CF3-423B-A5F1-79917C3BCC64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E68F0A90-7CF3-423B-A5F1-79917C3BCC64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E68F0A90-7CF3-423B-A5F1-79917C3BCC64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{152DAC69-E1D1-41F3-949F-832C950019F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{152DAC69-E1D1-41F3-949F-832C950019F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{152DAC69-E1D1-41F3-949F-832C950019F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{152DAC69-E1D1-41F3-949F-832C950019F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F91EA68-AA33-483F-A655-630B731961FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F91EA68-AA33-483F-A655-630B731961FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F91EA68-AA33-483F-A655-630B731961FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F91EA68-AA33-483F-A655-630B731961FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BC52C50-AEF8-470E-BEC9-CE67B365FFE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BC52C50-AEF8-470E-BEC9-CE67B365FFE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BC52C50-AEF8-470E-BEC9-CE67B365FFE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BC52C50-AEF8-470E-BEC9-CE67B365FFE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD91A1A5-3EAD-430E-84AD-9A972934784D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD91A1A5-3EAD-430E-84AD-9A972934784D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD91A1A5-3EAD-430E-84AD-9A972934784D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD91A1A5-3EAD-430E-84AD-9A972934784D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{152DAC69-E1D1-41F3-949F-832C950019F3} = {EDB22547-363D-41E7-98A1-81D5949652D6}
+		{7F91EA68-AA33-483F-A655-630B731961FB} = {EDB22547-363D-41E7-98A1-81D5949652D6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0F2B1DDD-90B0-45C5-AA21-98A481D51998}
+	EndGlobalSection
+EndGlobal

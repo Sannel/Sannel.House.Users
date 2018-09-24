@@ -1,0 +1,27 @@
+version: '2.4'
+
+services:
+  users:
+    image: ${DOCKER_REGISTRY}sannelhouseusers:1.0.0
+    build:
+      context: .
+      dockerfile: Sannel.House.Users/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=https://+:443
+    volumes:
+      - "./Sannel.House.Users/App_Config:c:/app/App_Config"
+      - "./Sannel.House.Users/App_Data:c:/app/App_Data"
+    labels:
+      org.shabadu.hostname: "users.house.dev.local"
+    networks:
+      housenet:
+        ipv4_address: "10.10.200.3"
+
+networks:
+  housenet:
+    driver: nat
+    ipam:
+      driver: windows
+      config:
+        - subnet: 10.10.200.0/24
+          gateway: 10.10.200.1
