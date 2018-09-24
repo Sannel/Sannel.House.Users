@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <UserSecretsId>aspnet-Sannel.House.Web.Users-3DD475D4-A2DF-4D1C-A25B-57BB5071393A</UserSecretsId>
-    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>aspnet-Sannel.House.Users-3DD475D4-A2DF-4D1C-A25B-57BB5071393A</UserSecretsId>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
     <DockerTargetOS>Windows</DockerTargetOS>
   </PropertyGroup>
 
@@ -27,9 +27,6 @@
     <ProjectReference Include="..\Migrations\Sannel.House.Users.Data.Sqlite\Sannel.House.Users.Data.Sqlite.csproj" />
     <ProjectReference Include="..\Migrations\Sannel.House.Users.Data.SqlServer\Sannel.House.Users.Data.SqlServer.csproj" />
     <ProjectReference Include="..\Sannel.House.Users.Data\Sannel.House.Users.Data.csproj" />
-    <ProjectReference Include="..\Sannel.House.Web.Users.Data.Sqlite\Sannel.House.Web.Users.Data.Sqlite.csproj" />
-    <ProjectReference Include="..\Sannel.House.Web.Users.Data.SqlServer\Sannel.House.Web.Users.Data.SqlServer.csproj" />
-    <ProjectReference Include="..\Sannel.House.Web.Users.Data\Sannel.House.Web.Users.Data.csproj" />
   </ItemGroup>
 
 </Project>

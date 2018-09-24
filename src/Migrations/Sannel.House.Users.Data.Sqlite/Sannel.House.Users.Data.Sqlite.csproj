@@ -13,6 +13,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Sannel.House.Users.Data\Sannel.House.Users.Data.csproj" />
-    <ProjectReference Include="..\Sannel.House.Web.Users.Data\Sannel.House.Web.Users.Data.csproj" />
   </ItemGroup>
 </Project>
