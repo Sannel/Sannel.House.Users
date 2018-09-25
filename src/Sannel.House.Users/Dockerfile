@@ -22,6 +22,4 @@ RUN dotnet publish "Sannel.House.Users.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-RUN "mkdir c:\app\app_config"
-RUN "mkdir c:\app\app_data"
 ENTRYPOINT ["dotnet", "Sannel.House.Users.dll"]
