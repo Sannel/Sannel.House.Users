@@ -1,0 +1,19 @@
+version: '2.4'
+
+services:
+  users:
+    volumes:
+      - "./src/Sannel.House.Users/app_config:c:/app/app_config"
+      - "./src/Sannel.House.Users/app_data:c:/app/app_data"
+    networks:
+      housenet:
+        ipv4_address: "10.10.200.3"
+
+networks:
+  housenet:
+    driver: nat
+    ipam:
+      driver: windows
+      config:
+        - subnet: 10.10.200.0/24
+          gateway: 10.10.200.1

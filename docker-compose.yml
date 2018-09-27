@@ -2,27 +2,12 @@ version: '2.4'
 
 services:
   users:
-    image: ${DOCKER_REGISTRY}sannelhouseusers:1.0.0
+    image: ${DOCKER_REGISTRY}sannelhouseusers:1.0.0-${SANNEL_ARCH}
     build:
       context: .
       dockerfile: src/Sannel.House.Users/Dockerfile
     environment:
       - ASPNETCORE_URLS=https://+:443
-    volumes:
-      - "./src/Sannel.House.Users/app_config:c:/app/app_config"
-      - "./src/Sannel.House.Users/app_data:c:/app/app_data"
     labels:
       org.shabadu.hostname: "users.house.dev.local"
       org.shabadu.cert: "src/Sannel.House.Users/app_config/house.dev.local.cer"
-    networks:
-      housenet:
-        ipv4_address: "10.10.200.3"
-
-networks:
-  housenet:
-    driver: nat
-    ipam:
-      driver: windows
-      config:
-        - subnet: 10.10.200.0/24
-          gateway: 10.10.200.1
