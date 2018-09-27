@@ -1,4 +1,4 @@
-
+#!/bin/pwsh
 
 if($IsLinux -eq $true)
 {
