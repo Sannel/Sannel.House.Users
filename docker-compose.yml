@@ -10,4 +10,4 @@ services:
       - ASPNETCORE_URLS=https://+:443
     labels:
       org.shabadu.hostname: "users.house.dev.local"
-      org.shabadu.cert: "src/Sannel.House.Users/app_config/house.dev.local.cer"
+      org.shabadu.cert: "src/Sannel.House.Users/app_config/sannel.crt"
