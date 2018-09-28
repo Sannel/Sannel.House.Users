@@ -32,7 +32,7 @@ namespace Sannel.House.Users
 			return WebHost.CreateDefaultBuilder(args)
 				.ConfigureAppConfiguration(c =>
 				{
-					c.AddJsonFile(Path.Combine("App_Config", "appsettings.json"), false, false);
+					c.AddJsonFile(Path.Combine("app_config", "appsettings.json"), false, false);
 				})
 				.UseStartup<Startup>();
 		}
