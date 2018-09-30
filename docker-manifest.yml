@@ -1,0 +1,17 @@
+image: sannel/sannelhouseusers:latest
+manifests:
+  -
+    image: sannel/sannelhouseusers:0.9-beta-win
+    platform:
+      architecture: amd64
+      os: windows
+  -
+    image: sannel/sannelhouseusers:0.9-beta-linux-x86_64
+    platform:
+      architecture: amd64
+      os: linux
+  -
+    image: sannel/sannelhouseusers:0.9-beta-linux-armv7l
+    platform:
+      architecture: arm
+      os: linux
