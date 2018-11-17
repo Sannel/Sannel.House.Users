@@ -11,6 +11,7 @@ COPY ["src/Sannel.House.Users/Sannel.House.Users.csproj", "src/Sannel.House.User
 COPY ["src/Migrations/Sannel.House.Users.Data.Sqlite/Sannel.House.Users.Data.Sqlite.csproj", "src/Migrations/Sannel.House.Users.Data.Sqlite/"]
 COPY ["src/Sannel.House.Users.Data/Sannel.House.Users.Data.csproj", "src/Sannel.House.Users.Data/"]
 COPY ["src/Migrations/Sannel.House.Users.Data.SqlServer/Sannel.House.Users.Data.SqlServer.csproj", "src/Migrations/Sannel.House.Users.Data.SqlServer/"]
+COPY ["src/Migrations/Sannel.House.Users.Data.MySql/Sannel.House.Users.Data.MySql.csproj", "src/Migrations/Sannel.House.Users.Data.MySql/"]
 RUN dotnet restore "src/Sannel.House.Users/Sannel.House.Users.csproj"
 COPY . .
 WORKDIR "/src/src/Sannel.House.Users"
