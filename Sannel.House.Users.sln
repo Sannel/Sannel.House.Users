@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sannel.House.Users.Data.MySql", "src\Migrations\Sannel.House.Users.Data.Mysql\Sannel.House.Users.Data.MySql.csproj", "{B2241EE2-D868-4C29-8D82-964C10DFFC99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{BD91A1A5-3EAD-430E-84AD-9A972934784D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD91A1A5-3EAD-430E-84AD-9A972934784D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD91A1A5-3EAD-430E-84AD-9A972934784D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2241EE2-D868-4C29-8D82-964C10DFFC99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2241EE2-D868-4C29-8D82-964C10DFFC99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2241EE2-D868-4C29-8D82-964C10DFFC99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2241EE2-D868-4C29-8D82-964C10DFFC99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{152DAC69-E1D1-41F3-949F-832C950019F3} = {EDB22547-363D-41E7-98A1-81D5949652D6}
 		{7F91EA68-AA33-483F-A655-630B731961FB} = {EDB22547-363D-41E7-98A1-81D5949652D6}
+		{B2241EE2-D868-4C29-8D82-964C10DFFC99} = {EDB22547-363D-41E7-98A1-81D5949652D6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F2B1DDD-90B0-45C5-AA21-98A481D51998}

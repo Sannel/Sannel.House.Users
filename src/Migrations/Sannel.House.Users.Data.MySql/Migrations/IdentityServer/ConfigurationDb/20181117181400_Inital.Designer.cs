@@ -3,27 +3,26 @@ using System;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.ConfigurationDb
+namespace Sannel.House.Users.Data.MySql.Migrations.IdentityServer.ConfigurationDb
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    partial class ConfigurationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181117181400_Inital")]
+    partial class Inital
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ApiResource", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Created");
 
@@ -56,8 +55,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ApiResourceClaim", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ApiResourceId");
 
@@ -75,8 +73,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ApiResourceProperty", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ApiResourceId");
 
@@ -98,8 +95,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ApiScope", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ApiResourceId");
 
@@ -132,8 +128,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ApiScopeClaim", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ApiScopeId");
 
@@ -151,8 +146,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ApiSecret", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ApiResourceId");
 
@@ -181,8 +175,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.Client", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("AbsoluteRefreshTokenLifetime");
 
@@ -290,8 +283,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientClaim", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -313,8 +305,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientCorsOrigin", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -332,8 +323,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientGrantType", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -351,8 +341,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientIdPRestriction", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -370,8 +359,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientPostLogoutRedirectUri", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -389,8 +377,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientProperty", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -412,8 +399,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientRedirectUri", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -431,8 +417,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientScope", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -450,8 +435,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ClientSecret", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ClientId");
 
@@ -480,8 +464,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.IdentityClaim", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("IdentityResourceId");
 
@@ -499,8 +482,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.IdentityResource", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Created");
 
@@ -537,8 +519,7 @@ namespace Sannel.House.Users.Data.SqlServer.Migrations.IdentityServer.Configurat
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.IdentityResourceProperty", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("IdentityResourceId");
 

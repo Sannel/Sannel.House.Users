@@ -24,6 +24,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sannel.House.Users.Data.Sqlite;
 using Sannel.House.Users.Data.SqlServer;
+using Sannel.House.Users.Data.MySql;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.AccessTokenValidation;
 using IdentityServer4;
@@ -33,6 +34,8 @@ using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging;
+using System.Data.Common;
 
 namespace Sannel.House.Users
 {
@@ -62,6 +65,11 @@ namespace Sannel.House.Users
 					case "SqlServer":
 						options.ConfigureSqlServer(Configuration["Db:ConnectionString"]);
 						break;
+					case "MySql":
+					case "mysql":
+						options.ConfigureMySql(Configuration["Db:ConnectionString"]);
+						break;
+
 					case "sqlite":
 					default:
 						options.ConfigureSqlite(Configuration["Db:ConnectionString"]);
@@ -89,6 +97,11 @@ namespace Sannel.House.Users
 							case "SqlServer":
 								o.ConfigureSqlServer(Configuration["Db:ConnectionString"]);
 								break;
+							case "MySql":
+							case "mysql":
+								o.ConfigureMySql(Configuration["Db:ConnectionString"]);
+								break;
+
 							case "sqlite":
 							default:
 								o.ConfigureSqlite(Configuration["Db:ConnectionString"]);
@@ -106,6 +119,10 @@ namespace Sannel.House.Users
 							case "SqlServer":
 								o.ConfigureSqlServer(Configuration["Db:ConnectionString"]);
 								break;
+							case "MySql":
+							case "mysql":
+								o.ConfigureMySql(Configuration["Db:ConnectionString"]);
+								break;
 							case "sqlite":
 							default:
 								o.ConfigureSqlite(Configuration["Db:ConnectionString"]);
@@ -122,10 +139,37 @@ namespace Sannel.House.Users
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider, ILogger<Startup> logger)
 		{
+			var p = Configuration["Db:Provider"];
 			{
 				var db = provider.GetService<ApplicationDbContext>();
+
+				if(string.Compare(p, "mysql", true) == 0
+					|| string.Compare(p, "sqlserver", true) == 0)
+				{
+					var retryCount = 0;
+					var connection = db.Database.GetDbConnection();
+					while(connection.State == System.Data.ConnectionState.Closed && retryCount <= 100)
+					{
+						try
+						{
+							connection.Open();
+						}
+						catch(DbException ex)
+						{
+							logger.LogError(ex, "Exception connecting to server Delaying and trying again");
+							retryCount++;
+							Task.Delay(1000).Wait();
+						}
+					}
+					if(retryCount >= 100)
+					{
+						logger.LogCritical("Unable to initialize connection to db shutting down.");
+						throw new Exception("Shutting down");
+					}
+				}
+
 				db.Database.Migrate();
 			}
 			{
