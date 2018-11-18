@@ -7,7 +7,7 @@ if($IsLinux -eq $true -or $IsMacOS -eq $true)
 	{
 		$uname = "x86";
 	}
-	if($uname -eq "armv7l")
+	if($uname -eq "armv7l" -or $uname -eq "unknown") # for now assume unknown is arm
 	{
 		$uname = "arm";
 	}
