@@ -145,30 +145,30 @@ namespace Sannel.House.Users
 			{
 				var db = provider.GetService<ApplicationDbContext>();
 
-				if(string.Compare(p, "mysql", true) == 0
-					|| string.Compare(p, "sqlserver", true) == 0)
-				{
-					var retryCount = 0;
-					var connection = db.Database.GetDbConnection();
-					while(connection.State == System.Data.ConnectionState.Closed && retryCount <= 100)
-					{
-						try
-						{
-							connection.Open();
-						}
-						catch(DbException ex)
-						{
-							logger.LogError(ex, "Exception connecting to server Delaying and trying again");
-							retryCount++;
-							Task.Delay(1000).Wait();
-						}
-					}
-					if(retryCount >= 100)
-					{
-						logger.LogCritical("Unable to initialize connection to db shutting down.");
-						throw new Exception("Shutting down");
-					}
-				}
+				//if(string.Compare(p, "mysql", true) == 0
+				//	|| string.Compare(p, "sqlserver", true) == 0)
+				//{
+				//	var retryCount = 0;
+				//	var connection = db.Database.GetDbConnection();
+				//	while(connection.State == System.Data.ConnectionState.Closed && retryCount <= 100)
+				//	{
+				//		try
+				//		{
+				//			connection.Open();
+				//		}
+				//		catch(DbException ex)
+				//		{
+				//			logger.LogError(ex, "Exception connecting to server Delaying and trying again");
+				//			retryCount++;
+				//			Task.Delay(1000).Wait();
+				//		}
+				//	}
+				//	if(retryCount >= 100)
+				//	{
+				//		logger.LogCritical("Unable to initialize connection to db shutting down.");
+				//		throw new Exception("Shutting down");
+				//	}
+				//}
 
 				db.Database.Migrate();
 			}
