@@ -12,6 +12,7 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sannel.House.Users.Models;
 using System;
@@ -24,52 +25,53 @@ namespace Sannel.House.Users
 	public class DataSeeder
 	{
 		private IConfiguration configuration;
-		private ConfigurationDbContext configContext;
-		private RoleManager<IdentityRole> roleManager;
-		private UserManager<IdentityUser> userManager;
+		private IServiceProvider provider;
 		private ILogger logger;
 
 		public DataSeeder(IConfiguration configuration,
-			ConfigurationDbContext configContext,
-			RoleManager<IdentityRole> roleManager,
-			UserManager<IdentityUser> userManager,
+			IServiceProvider provider,
 			ILogger<DataSeeder> logger)
 		{
 			this.configuration = configuration;
-			this.configContext = configContext;
-			this.roleManager = roleManager;
-			this.userManager = userManager;
+			this.provider = provider;
 			this.logger = logger;
 		}
 
 		public async void SeedData()
 		{
-			var apiSection = configuration.GetSection("Db:DbSeed:ApiResources");
-			var apiList = apiSection.Get<List<ApiResource>>();
-			foreach(var api in apiList)
+			using (var scope = provider.CreateScope())
 			{
-				if(configContext.ApiResources.Count(i => i.Name == api.Name) == 0)
+				var configContext = scope.ServiceProvider.GetService<ConfigurationDbContext>();
+				var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+				var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+
+				var apiSection = configuration.GetSection("Db:DbSeed:ApiResources");
+				var apiList = apiSection.Get<List<ApiResource>>();
+				foreach (var api in apiList)
 				{
-					logger.LogDebug("Adding api resource {0}", api.Name);
-					await configContext.ApiResources.AddAsync(api);
+					if (configContext.ApiResources.Count(i => i.Name == api.Name) == 0)
+					{
+						logger.LogDebug("Adding api resource {0}", api.Name);
+						await configContext.ApiResources.AddAsync(api);
+					}
 				}
+
+				await configContext.SaveChangesAsync();
+
+				var clientsSection = configuration.GetSection("Db:DbSeed:Clients");
+				await addClients(configContext, clientsSection);
+
+				await configContext.SaveChangesAsync();
+
+				var rolesSection = configuration.GetSection("Db:DbSeed:Roles");
+				await addRoles(roleManager, rolesSection);
+
+				var usersSection = configuration.GetSection("Db:DbSeed:Users");
+				await addUsers(userManager, usersSection);
 			}
-
-			await configContext.SaveChangesAsync();
-
-			var clientsSection = configuration.GetSection("Db:DbSeed:Clients");
-			await addClients(clientsSection);
-
-			await configContext.SaveChangesAsync();
-
-			var rolesSection = configuration.GetSection("Db:DbSeed:Roles");
-			await addRoles(rolesSection);
-
-			var usersSection = configuration.GetSection("Db:DbSeed:Users");
-			await addUsers(usersSection);
 		}
 
-		private async Task addClients(IConfigurationSection section)
+		private async Task addClients(ConfigurationDbContext configContext, IConfigurationSection section)
 		{
 			var clientList = section.Get<List<Client>>();
 
@@ -94,7 +96,7 @@ namespace Sannel.House.Users
 			}
 		}
 
-		private async Task addRoles(IConfigurationSection section)
+		private async Task addRoles(RoleManager<IdentityRole> roleManager, IConfigurationSection section)
 		{
 			var roles = section.Get<List<string>>();
 			foreach(var r in roles)
@@ -107,7 +109,7 @@ namespace Sannel.House.Users
 			}
 		}
 
-		private async Task addUsers(IConfigurationSection section)
+		private async Task addUsers(UserManager<IdentityUser> userManager, IConfigurationSection section)
 		{
 			foreach(var child in section.GetChildren())
 			{
