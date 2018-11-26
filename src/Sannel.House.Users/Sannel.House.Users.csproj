@@ -21,6 +21,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" PrivateAssets="All" />
+    <PackageReference Include="Sannel.House.Data" Version="1811.25.0-beta" />
+    <PackageReference Include="Sannel.House.Web.Helpers" Version="1811.25.1-beta" />
   </ItemGroup>
 
   <ItemGroup>
