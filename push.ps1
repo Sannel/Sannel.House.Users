@@ -2,7 +2,7 @@
 param(
 )
 
-$target = "devices"
+$target = "users"
 
 if($IsLinux -eq $true -or $IsMacOS -eq $true)
 {
