@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: src/Sannel.House.Users/Dockerfile
+      args:
+        USER: "${USER}"
     environment:
       - ASPNETCORE_URLS=https://+:443
     labels:

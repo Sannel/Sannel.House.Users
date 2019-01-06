@@ -22,5 +22,7 @@ RUN dotnet publish "Sannel.House.Users.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
+ARG USER=root
+USER ${USER}
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Sannel.House.Users.dll"]
