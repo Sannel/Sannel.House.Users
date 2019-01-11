@@ -4,6 +4,8 @@ param(
 
 $target = "";
 
+Remove-Item -ErrorAction SilentlyContinue src/Sannel.House.Users/app_data/data.db
+
 if($IsLinux -eq $true -or $IsMacOS -eq $true)
 {
 	$uname = uname -p

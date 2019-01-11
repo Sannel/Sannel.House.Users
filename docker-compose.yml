@@ -1,4 +1,4 @@
-version: '2.4'
+version: '3.6'
 
 services:
   users:
@@ -8,8 +8,3 @@ services:
       dockerfile: src/Sannel.House.Users/Dockerfile
       args:
         USER: "${USER}"
-    environment:
-      - ASPNETCORE_URLS=https://+:443
-    labels:
-      org.shabadu.hostname: "users.house.dev.local"
-      org.shabadu.cert: "src/Sannel.House.Users/app_config/sannel.crt"
