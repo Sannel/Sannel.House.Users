@@ -1,4 +1,4 @@
-/* Copyright 2018 Sannel Software, L.L.C.
+/* Copyright 2019 Sannel Software, L.L.C.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
@@ -25,6 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sannel.House.Users.Data.Sqlite;
 using Sannel.House.Users.Data.SqlServer;
 using Sannel.House.Users.Data.MySql;
+using Sannel.House.Users.Data.PostgreSQL;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.AccessTokenValidation;
 using IdentityServer4;
@@ -72,6 +73,11 @@ namespace Sannel.House.Users
 						options.ConfigureMySql(Configuration["Db:ConnectionString"]);
 						break;
 
+					case "PostgreSQL":
+					case "postgresql":
+						options.ConfigurePostgreSQL(Configuration["Db:ConnectionString"]);
+						break;
+
 					case "sqlite":
 					default:
 						options.ConfigureSqlite(Configuration["Db:ConnectionString"]);
@@ -103,6 +109,10 @@ namespace Sannel.House.Users
 							case "mysql":
 								o.ConfigureMySql(Configuration["Db:ConnectionString"]);
 								break;
+							case "PostgreSQL":
+							case "postgresql":
+								o.ConfigurePostgreSQL(Configuration["Db:ConnectionString"]);
+								break;
 
 							case "sqlite":
 							default:
@@ -124,6 +134,10 @@ namespace Sannel.House.Users
 							case "MySql":
 							case "mysql":
 								o.ConfigureMySql(Configuration["Db:ConnectionString"]);
+								break;
+							case "PostgreSQL":
+							case "postgresql":
+								o.ConfigurePostgreSQL(Configuration["Db:ConnectionString"]);
 								break;
 							case "sqlite":
 							default:
@@ -149,7 +163,8 @@ namespace Sannel.House.Users
 				var db = provider.GetService<ApplicationDbContext>();
 
 				if (string.Compare(p, "mysql", true) == 0
-					|| string.Compare(p, "sqlserver", true) == 0)
+					|| string.Compare(p, "sqlserver", true) == 0
+					|| string.Compare(p, "postgresql", true) == 0)
 				{
 					db.WaitForServer(logger);
 				}
