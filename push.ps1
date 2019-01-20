@@ -9,6 +9,8 @@ if($null -eq $version -or $version -eq "")
 	$version = (Get-Date -Format yyMMdd) + "-local";
 }
 
+docker login
+
 if($IsLinux -eq $true -or $IsMacOS -eq $true)
 {
 	$uname = uname -m
