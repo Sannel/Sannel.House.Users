@@ -5,6 +5,9 @@ param(
 $target = "";
 
 Remove-Item -ErrorAction SilentlyContinue src/Sannel.House.Users/app_data/data.db
+# Pull latest images 
+docker pull microsoft/dotnet:2.2-aspnetcore-runtime
+docker pull microsoft/dotnet:2.2-sdk
 
 if($IsLinux -eq $true -or $IsMacOS -eq $true)
 {
@@ -12,7 +15,7 @@ if($IsLinux -eq $true -or $IsMacOS -eq $true)
 	$uname = uname -p
 	if($uname -eq "x86_64" -or $uname -eq "i386")
 	{
-		$uname = "x86";
+		$uname = "x64";
 	}
 	if($uname -eq "armv7l" -or $uname -eq "unknown") # for now assume unknown is arm
 	{
