@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   users:
-    image: ${DOCKER_REGISTRY}sannelhouseusers:${SANNEL_VERSION}-beta-${SANNEL_ARCH}
+    image: ${DOCKER_REGISTRY}sannelhouseusers:build-${SANNEL_VERSION}-${SANNEL_ARCH}
     build:
       context: .
       dockerfile: src/Sannel.House.Users/Dockerfile
