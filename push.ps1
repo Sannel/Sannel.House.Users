@@ -22,12 +22,12 @@ if($IsLinux -eq $true -or $IsMacOS -eq $true)
 	}
 
 	$env:SANNEL_ARCH="linux-$uname"
-	$env:SANNEL_VERSION=Get-Date -format yyMM.dd
+	$env:SANNEL_VERSION=$version
 	return docker-compose -f docker-compose.yml -f docker-compose.unix.yml push $target
 }
 else
 {
 	$env:SANNEL_ARCH="win"
-	$env:SANNEL_VERSION=Get-Date -format yyMM.dd
+	$env:SANNEL_VERSION=$version
 	return docker-compose -f docker-compose.yml -f docker-compose.windows.yml push $target
 }
