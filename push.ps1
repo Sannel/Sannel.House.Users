@@ -9,16 +9,19 @@ if($null -eq $version -or $version -eq "")
 	$version = (Get-Date -Format yyMMdd) + "-local";
 }
 
-docker login
+if($null -ne $env:docker_user)
+{
+	docker login -u $env:docker_user -p $env:docker_password
+}
 
 if($IsLinux -eq $true -or $IsMacOS -eq $true)
 {
 	$uname = uname -m
-	if($uname -eq "x86_64" -or $uname -eq "i386")
+	if($uname -eq "x86_64")
 	{
-		$uname = "x86";
+		$uname = "x64";
 	}
-	if($uname -eq "armv7l" -or $uname -eq "unknown") # for now assume unknown is arm
+	if($uname -eq "armv7l") # for now assume unknown is arm
 	{
 		$uname = "arm";
 	}
