@@ -23,7 +23,6 @@ RUN dotnet publish "Sannel.House.Users.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
-USER root
 COPY --from=publish /app .
 COPY --from=build /src/src/Sannel.House.Users/app_config app_config
 COPY --from=build /src/src/Sannel.House.Users/app_data app_data

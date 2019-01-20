@@ -8,6 +8,7 @@ Remove-Item -ErrorAction SilentlyContinue src/Sannel.House.Users/app_data/data.d
 
 if($IsLinux -eq $true -or $IsMacOS -eq $true)
 {
+	Write-Host "Building on Linux"
 	$uname = uname -p
 	if($uname -eq "x86_64" -or $uname -eq "i386")
 	{
@@ -25,8 +26,9 @@ if($IsLinux -eq $true -or $IsMacOS -eq $true)
 }
 else
 {
+	Write-Host "Building on Windows"
 	$env:USER="administrator"
 	$env:SANNEL_ARCH="win"
 	$env:SANNEL_VERSION=Get-Date -format yyMM.dd
-	return docker-compose -f docker-compose.yml -f docker-compose.windows.yml build $target
+	return docker-compose.exe -f docker-compose.yml -f docker-compose.windows.yml build $target
 }
