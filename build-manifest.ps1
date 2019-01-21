@@ -14,3 +14,7 @@ $win="${env:DOCKER_REGISTRY}sannelhouseusers:build-$version-win"
 
 docker manifest create $combinedTag $arm $x64 $win
 docker manifest push $combinedTag
+
+$combinedTag="${env:DOCKER_REGISTRY}sannelhouseusers:beta"
+docker manifest create $combinedTag $arm $x64 $win
+docker manifest push $combinedTag
