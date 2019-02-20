@@ -7,13 +7,15 @@ EXPOSE 443
 
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
+COPY [".nuget/nuget.config", ".nuget/nuget.config"]
+COPY ["Directory.Build.props", "./"]
 COPY ["src/Sannel.House.Users/Sannel.House.Users.csproj", "src/Sannel.House.Users/"]
 COPY ["src/Migrations/Sannel.House.Users.Data.Sqlite/Sannel.House.Users.Data.Sqlite.csproj", "src/Migrations/Sannel.House.Users.Data.Sqlite/"]
 COPY ["src/Sannel.House.Users.Data/Sannel.House.Users.Data.csproj", "src/Sannel.House.Users.Data/"]
 COPY ["src/Migrations/Sannel.House.Users.Data.SqlServer/Sannel.House.Users.Data.SqlServer.csproj", "src/Migrations/Sannel.House.Users.Data.SqlServer/"]
 COPY ["src/Migrations/Sannel.House.Users.Data.MySql/Sannel.House.Users.Data.MySql.csproj", "src/Migrations/Sannel.House.Users.Data.MySql/"]
 COPY ["src/Migrations/Sannel.House.Users.Data.PostgreSQL/Sannel.House.Users.Data.PostgreSQL.csproj", "src/Migrations/Sannel.House.Users.Data.PostgreSQL/"]
-RUN dotnet restore "src/Sannel.House.Users/Sannel.House.Users.csproj"
+RUN dotnet restore --configfile .nuget/nuget.config "src/Sannel.House.Users/Sannel.House.Users.csproj"
 COPY . .
 WORKDIR "/src/src/Sannel.House.Users"
 RUN dotnet build "Sannel.House.Users.csproj" -c Release -o /app
