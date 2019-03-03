@@ -83,7 +83,7 @@ IdentityServer:
 Kestrel:
   Endpoints:
     HTTPS:
-      Url: https://*:443
+      Url: https://*:8433
       Certificate:
         Path: app_config/house.dev.local.pfx
         Password: "@Password1"

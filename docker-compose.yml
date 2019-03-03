@@ -8,3 +8,6 @@ services:
       dockerfile: src/Sannel.House.Users/Dockerfile
       args:
         USER: "${USER}"
+    ports:
+      - "8443:8443"
+      - "8080:8080"
