@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sannel.House.Users.Data.MySql", "src\Migrations\Sannel.House.Users.Data.Mysql\Sannel.House.Users.Data.MySql.csproj", "{B2241EE2-D868-4C29-8D82-964C10DFFC99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sannel.House.Users.Data.MySql", "src\Migrations\Sannel.House.Users.Data.MySql\Sannel.House.Users.Data.MySql.csproj", "{B2241EE2-D868-4C29-8D82-964C10DFFC99}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sannel.House.Users.Data.PostgreSQL", "src\Migrations\Sannel.House.Users.Data.PostgreSQL\Sannel.House.Users.Data.PostgreSQL.csproj", "{BB1536C2-787A-430F-9119-78F66FAF35C3}"
 EndProject
