@@ -7,7 +7,7 @@ EXPOSE 8080
 EXPOSE 8443
 
 ARG sdk_tag=2.2
-FROM mcr.microsoft.com/dotnet/core/sdk:${tag} AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:${sdk_tag} AS build
 WORKDIR /src
 COPY [".nuget/nuget.config", ".nuget/nuget.config"]
 COPY ["Directory.Build.props", "./"]
