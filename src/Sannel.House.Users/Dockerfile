@@ -1,12 +1,12 @@
 #Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
 #For more information, please see https://aka.ms/containercompat
 ARG tag=2.2
+ARG sdk_tag=2.2
 FROM mcr.microsoft.com/dotnet/core/runtime:${tag} AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8443
 
-ARG sdk_tag=2.2
 FROM mcr.microsoft.com/dotnet/core/sdk:${sdk_tag} AS build
 WORKDIR /src
 COPY [".nuget/nuget.config", ".nuget/nuget.config"]
