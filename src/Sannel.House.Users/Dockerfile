@@ -1,11 +1,13 @@
 #Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
 #For more information, please see https://aka.ms/containercompat
-
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+ARG tag=2.2
+FROM mcr.microsoft.com/dotnet/core/runtime:${tag} AS base
 WORKDIR /app
-EXPOSE 443
+EXPOSE 8080
+EXPOSE 8443
 
-FROM microsoft/dotnet:2.2-sdk AS build
+ARG sdk_tag=2.2
+FROM mcr.microsoft.com/dotnet/core/sdk:${tag} AS build
 WORKDIR /src
 COPY [".nuget/nuget.config", ".nuget/nuget.config"]
 COPY ["Directory.Build.props", "./"]
