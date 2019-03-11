@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/dotnet/core/runtime:${tag} AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8443
-COPY passwd /etc/
-USER house
+COPY /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
 COPY Sannel.House.Users/ .
-RUN /bin/chown -R house /app
+RUN useradd -m house && chown -R house /app && rm -f /usr/bin/qemu-arm-static
+USER house
 ENTRYPOINT ["dotnet", "Sannel.House.Users.dll"]
