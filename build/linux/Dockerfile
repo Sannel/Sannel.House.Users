@@ -6,4 +6,5 @@ EXPOSE 8443
 COPY passwd /etc/
 USER house
 COPY Sannel.House.Users/ .
+RUN /bin/chown -R house /app
 ENTRYPOINT ["dotnet", "Sannel.House.Users.dll"]
