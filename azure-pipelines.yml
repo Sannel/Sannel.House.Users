@@ -63,7 +63,7 @@ jobs:
       artifactName: 'osx-x64'
       targetPath: '$(Build.StagingDirectory)'
 
-- job: linux-arm
+- job: linux_arm
   pool:
     vmImage: ubuntu-16.04
   dependsOn: osx
