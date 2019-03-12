@@ -1,11 +1,13 @@
 trigger:
 - master
+- develop
+
+name: $(date:yyyy.MM.dd)$(rev:.rr)
 
 jobs:
 - job: 'osx'
   pool:
     vmImage: macOS-10.13
-  name: $(date:yyyy.MM.dd)$(rev:.rr)
   steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Use .NET Core sdk 2.2.104'
