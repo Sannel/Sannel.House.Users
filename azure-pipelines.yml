@@ -4,7 +4,7 @@ trigger:
 jobs:
 - job: 'mac osx'
   pool:
-    vmImage: Hosted macOS
+    vmImage: macOS-10.13
   steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Use .NET Core sdk 2.2.104'
