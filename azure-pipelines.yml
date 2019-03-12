@@ -45,14 +45,14 @@ jobs:
     inputs:
       SourceFolder: 'src/Sannel.House.Users/app_config'
       Contents: |
-      **/*.json
-      **/*.yml
-      **/*.pfx
-      **/*.crt
+        **/*.json
+        **/*.yml
+        **/*.pfx
+        **/*.crt
       TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
   - powershell: |
-    New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
-    New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+      New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
+      New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
     displayName: 'Prepare Items'
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Pipeline Artifact'
