@@ -69,12 +69,12 @@ jobs:
   dependsOn: osx
   steps:
     - bash: |
-      # Write your commands here
-      sudo apt-get update
-      sudo apt-get install -y qemu qemu-user-static qemu-user binfmt-support
-      cp /usr/bin/qemu-arm-static $(Build.StagingDirectory)
-      # Use the environment variables input below to pass secret variables to this script
-      displayName: 'Install qemu'
+        # Write your commands here
+        sudo apt-get update
+        sudo apt-get install -y qemu qemu-user-static qemu-user binfmt-support
+        cp /usr/bin/qemu-arm-static $(Build.StagingDirectory)
+        # Use the environment variables input below to pass secret variables to this script
+        displayName: 'Install qemu'
     - task: DotNetCoreInstaller@0
       displayName: 'Use .NET Core sdk 2.2.104'
       inputs:
@@ -118,17 +118,17 @@ jobs:
       inputs:
         SourceFolder: 'src/Sannel.House.Users/app_config'
         Contents: |
-        **/*.json
-        **/*.yml
-        **/*.pfx
-        **/*.crt
+          **/*.json
+          **/*.yml
+          **/*.pfx
+          **/*.crt
         TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
 
     - powershell: |
-      New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
-      New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
-      
-      copy-item -Force -Verbose build/linux-arm/Dockerfile $(Build.StagingDirectory)/
+        New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
+        New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+        
+        copy-item -Force -Verbose build/linux-arm/Dockerfile $(Build.StagingDirectory)/
       displayName: 'Prepare Items'
 
     - task: Docker@1
@@ -162,12 +162,12 @@ jobs:
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
 
     - powershell: |
-      # Write your powershell commands here.
-      
-      Remove-Item -Force $(Build.StagingDirectory)/Dockerfile*
-      Remove-Item -Force $(Build.StagingDirectory)/qemu*
-      
-      # Use the environment variables input below to pass secret variables to this script.
+        # Write your powershell commands here.
+        
+        Remove-Item -Force $(Build.StagingDirectory)/Dockerfile*
+        Remove-Item -Force $(Build.StagingDirectory)/qemu*
+        
+        # Use the environment variables input below to pass secret variables to this script.
       displayName: 'clean up copy'
 
     - task: PublishPipelineArtifact@0
