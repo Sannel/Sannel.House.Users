@@ -68,11 +68,11 @@ jobs:
     vmImage: ubuntu-16.04
   dependsOn: osx
   steps:
-    - bash: |
+    - powershell: |
         # Write your commands here
         sudo apt-get update
         sudo apt-get install -y qemu qemu-user-static qemu-user binfmt-support
-        cp /usr/bin/qemu-arm-static $(Build.StagingDirectory)
+        Copy-Item -Verbose /usr/bin/qemu-arm-static $(Build.StagingDirectory)
         # Use the environment variables input below to pass secret variables to this script
         displayName: 'Install qemu'
     - task: DotNetCoreInstaller@0
