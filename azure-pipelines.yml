@@ -2,7 +2,7 @@ trigger:
 - master
 
 jobs:
-- job: 'mac osx'
+- job: 'osx'
   pool:
     vmImage: macOS-10.13
   steps:
