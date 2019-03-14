@@ -70,6 +70,7 @@ jobs:
   pool:
     vmImage: ubuntu-16.04
   dependsOn: osx
+  condition: succeeded('osx')
   steps:
     - powershell: |
         # Write your commands here
@@ -172,6 +173,8 @@ jobs:
 - job: linux_x64
   pool:
     vmImage: ubuntu-16.04
+  dependsOn: linux_arm
+  condition: succeeded('linux_arm')
   steps:
     - task: DotNetCoreInstaller@0
       displayName: 'Use .NET Core sdk $(sdk_version)'
@@ -261,5 +264,143 @@ jobs:
       displayName: 'Publish Pipeline Artifact'
       inputs:
         artifactName: 'linux-x64'
+        targetPath: '$(Build.StagingDirectory)'
+
+- job: windows_x64
+  pool:
+    vmImage: windows-2019
+  dependsOn: linux_x64
+  condition: succeeded('linux_x64')
+  steps:
+    - task: DotNetCoreInstaller@0
+      displayName: 'Use .NET Core sdk $(sdk_version)'
+      inputs:
+        version: $(sdk_version)
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: custom
+        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        custom: restore
+        arguments: '-r win-x64 --configfile .nuget/nuget.config'
+        feedsToUse: config
+        nugetConfigPath: .nuget/nuget.config
+        externalFeedCredentials: 'Sannel House MyGet'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build Release'
+      inputs:
+        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        arguments: '-r win-x64 -c Release'
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build Debug'
+      inputs:
+        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        arguments: '-r win-x64 -c Debug'
+      condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet publish'
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        arguments: '-r win-x64 -o $(Build.StagingDirectory)'
+        zipAfterPublish: false
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+      inputs:
+        SourceFolder: 'src/Sannel.House.Users/app_config'
+        Contents: |
+          **/*.json
+          **/*.yml
+          **/*.pfx
+          **/*.crt
+        TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+    - powershell: |
+        New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
+        New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+        
+        copy-item -Force -Verbose build/windows/Dockerfile $(Build.StagingDirectory)/
+      displayName: 'Prepare Items'
+    - task: Docker@0
+      displayName: 'Build an image x64 1809'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryConnection: 'Docker Hub'
+        action: 'Run a Docker command'
+        customCommand: 'build --build-arg tag=2.2-nanoserver-1809 -t sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1809 --isolation hyperv $(Build.StagingDirectory)'
+    - task: Docker@0
+      displayName: 'Build an image x64 1803'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryConnection: 'Docker Hub'
+        dockerFile: '$(Build.StagingDirectory)/Dockerfile'
+        buildArguments: 'tag=2.2-nanoserver-1803'
+        defaultContext: false
+        context: '$(Build.StagingDirectory)'
+        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1803'
+    - task: Docker@0
+      displayName: 'Build an image x64 1709'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryConnection: 'Docker Hub'
+        dockerFile: '$(Build.StagingDirectory)/Dockerfile'
+        buildArguments: 'tag=2.2-nanoserver-1709'
+        defaultContext: false
+        context: '$(Build.StagingDirectory)'
+        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1709'
+    - task: Docker@0
+      displayName: 'Build an image x64 sac2016'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryConnection: 'Docker Hub'
+        dockerFile: '$(Build.StagingDirectory)/Dockerfile'
+        buildArguments: 'tag=2.2-nanoserver-sac2016'
+        defaultContext: false
+        context: '$(Build.StagingDirectory)'
+        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-sac2016'
+    - task: Docker@1
+      displayName: 'Push an image 1809'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push an image'
+        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1809'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+    - task: Docker@1
+      displayName: 'Push an image 1803'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push an image'
+        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1803'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+    - task: Docker@1
+      displayName: 'Push an image 1709'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push an image'
+        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1709'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+    - task: Docker@1
+      displayName: 'Push an image sac2016'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push an image'
+        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-sac2016'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+    - powershell: |
+        # Write your powershell commands here.
+        
+        Remove-Item -Force $(Build.StagingDirectory)/Dockerfile*
+        
+        # Use the environment variables input below to pass secret variables to this script.
+      displayName: 'clean up'
+    - task: PublishPipelineArtifact@0
+      displayName: 'Publish Pipeline Artifact'
+      inputs:
+        artifactName: 'win-x64'
         targetPath: '$(Build.StagingDirectory)'
 
