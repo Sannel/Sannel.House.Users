@@ -10,9 +10,9 @@ jobs:
     vmImage: macOS-10.13
   steps:
   - task: DotNetCoreInstaller@0
-    displayName: 'Use .NET Core sdk 2.2.104'
+    displayName: 'Use .NET Core sdk 2.2'
     inputs:
-      version: 2.2.104
+      version: 2.2.105
   - task: DotNetCoreCLI@2
     displayName: 'dotnet restore'
     inputs:
@@ -76,9 +76,9 @@ jobs:
         # Use the environment variables input below to pass secret variables to this script
       displayName: 'Install qemu'
     - task: DotNetCoreInstaller@0
-      displayName: 'Use .NET Core sdk 2.2.104'
+      displayName: 'Use .NET Core sdk 2.2'
       inputs:
-        version: 2.2.104
+        version: 2.2.105
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
@@ -89,21 +89,18 @@ jobs:
         feedsToUse: config
         nugetConfigPath: .nuget/nuget.config
         externalFeedCredentials: 'Sannel House MyGet'
-
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Release'
       inputs:
         projects: src/Sannel.House.Users/Sannel.House.Users.csproj
         arguments: '-r linux-arm -c Release'
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Debug'
       inputs:
         projects: src/Sannel.House.Users/Sannel.House.Users.csproj
         arguments: '-r linux-arm -c Debug'
       condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-
     - task: DotNetCoreCLI@2
       displayName: 'dotnet publish'
       inputs:
@@ -112,7 +109,6 @@ jobs:
         projects: src/Sannel.House.Users/Sannel.House.Users.csproj
         arguments: '-r linux-arm -o $(Build.StagingDirectory)'
         zipAfterPublish: false
-
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(Build.StagingDirectory)/Sannel.House.Users/app_config/'
       inputs:
@@ -123,14 +119,12 @@ jobs:
           **/*.pfx
           **/*.crt
         TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
-
     - powershell: |
         New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
         New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
         
         copy-item -Force -Verbose build/linux-arm/Dockerfile $(Build.StagingDirectory)/
       displayName: 'Prepare Items'
-
     - task: Docker@1
       displayName: 'Run an image '
       inputs:
@@ -140,7 +134,6 @@ jobs:
         arguments: '--rm --privileged'
         imageName: ' multiarch/qemu-user-static:register'
         containerCommand: '--reset'
-
     - task: Docker@0
       displayName: 'Build an image arm'
       inputs:
@@ -151,7 +144,6 @@ jobs:
         defaultContext: false
         context: '$(Build.StagingDirectory)'
         imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-linux-arm32v7'
-
     - task: Docker@1
       displayName: 'Push an image'
       inputs:
@@ -160,7 +152,6 @@ jobs:
         command: 'Push an image'
         imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-linux-arm32v7'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
-
     - powershell: |
         # Write your powershell commands here.
         
@@ -169,10 +160,103 @@ jobs:
         
         # Use the environment variables input below to pass secret variables to this script.
       displayName: 'clean up copy'
-
     - task: PublishPipelineArtifact@0
       displayName: 'Publish Pipeline Artifact'
       inputs:
         artifactName: 'linux-arm'
         targetPath: '$(Build.StagingDirectory)'
+
+- job: linux-x64
+  pool:
+    vmImage: ubuntu-16.04
+  steps:
+  - task: DotNetCoreInstaller@0
+    displayName: 'Use .NET Core sdk 2.2.104'
+    inputs:
+      version: 2.2.105
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet restore'
+    inputs:
+      command: custom
+      projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+      custom: restore
+      arguments: '-r linux-x64 --configfile .nuget/nuget.config'
+      feedsToUse: config
+      nugetConfigPath: .nuget/nuget.config
+      externalFeedCredentials: 'Sannel House MyGet'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet build Release'
+    inputs:
+      projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+      arguments: '-r linux-x64 -c Release'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet build Debug'
+    inputs:
+      projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+      arguments: '-r linux-x64 -c Debug'
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet publish'
+    inputs:
+      command: publish
+      publishWebProjects: false
+      projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+      arguments: '-r linux-x64 -o $(Build.StagingDirectory)'
+      zipAfterPublish: false
+
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+    inputs:
+      SourceFolder: 'src/Sannel.House.Users/app_config'
+      Contents: |
+        **/*.json
+        **/*.yml
+        **/*.pfx
+        **/*.crt
+      TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+
+  - powershell: |
+      New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
+      New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+      
+      copy-item -Force -Verbose build/linux-x64/Dockerfile $(Build.StagingDirectory)/
+    displayName: 'Prepare Items'
+
+  - task: Docker@0
+    displayName: 'Build an image x64'
+    inputs:
+      containerregistrytype: 'Container Registry'
+      dockerRegistryConnection: 'Docker Hub'
+      dockerFile: '$(Build.StagingDirectory)/Dockerfile'
+      buildArguments: 'tag=2.2'
+      defaultContext: false
+      context: '$(Build.StagingDirectory)'
+      imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-linux-x64'
+
+  - task: Docker@1
+    displayName: 'Push an image'
+    inputs:
+      containerregistrytype: 'Container Registry'
+      dockerRegistryEndpoint: 'Docker Hub'
+      command: 'Push an image'
+      imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-linux-x64'
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+
+  - powershell: |
+      # Write your powershell commands here.
+      
+      Remove-Item -Force $(Build.StagingDirectory)/Dockerfile*
+      
+      # Use the environment variables input below to pass secret variables to this script.
+    displayName: 'clean up'
+
+  - task: PublishPipelineArtifact@0
+    displayName: 'Publish Pipeline Artifact'
+    inputs:
+      artifactName: 'linux-x64'
+      targetPath: '$(Build.StagingDirectory)'
 
