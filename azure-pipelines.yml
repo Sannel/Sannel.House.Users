@@ -4,6 +4,7 @@ trigger:
 
 variables:
   sdk_version: 2.2.104
+  imageName: sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)
 
 name: $(date:yyyy.MM.dd)$(rev:.rr)
 
@@ -147,14 +148,14 @@ jobs:
         buildArguments: 'tag=2.2-stretch-slim-arm32v7'
         defaultContext: false
         context: '$(Build.StagingDirectory)'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-linux-arm32v7'
+        imageName: '$(imageName)-linux-arm32v7'
     - task: Docker@1
       displayName: 'Push an image'
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-linux-arm32v7'
+        imageName: '$(imageName)-linux-arm32v7'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - powershell: |
         # Write your powershell commands here.
@@ -241,7 +242,7 @@ jobs:
         buildArguments: 'tag=2.2'
         defaultContext: false
         context: '$(Build.StagingDirectory)'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-linux-x64'
+        imageName: '$(imageName)-linux-x64'
 
     - task: Docker@1
       displayName: 'Push an image'
@@ -249,7 +250,7 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-linux-x64'
+        imageName: '$(imageName)-linux-x64'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
 
     - powershell: |
@@ -328,7 +329,7 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryConnection: 'Docker Hub'
         action: 'Run a Docker command'
-        customCommand: 'build --build-arg tag=2.2-nanoserver-1809 -t sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1809 --isolation hyperv $(Build.StagingDirectory)'
+        customCommand: 'build --build-arg tag=2.2-nanoserver-1809 -t $(imageName)-win-x64-1809 --isolation hyperv $(Build.StagingDirectory)'
     - task: Docker@0
       displayName: 'Build an image x64 1803'
       inputs:
@@ -338,7 +339,7 @@ jobs:
         buildArguments: 'tag=2.2-nanoserver-1803'
         defaultContext: false
         context: '$(Build.StagingDirectory)'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1803'
+        imageName: '$(imageName)-win-x64-1803'
     - task: Docker@0
       displayName: 'Build an image x64 1709'
       inputs:
@@ -348,7 +349,7 @@ jobs:
         buildArguments: 'tag=2.2-nanoserver-1709'
         defaultContext: false
         context: '$(Build.StagingDirectory)'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1709'
+        imageName: '$(imageName)-win-x64-1709'
     - task: Docker@0
       displayName: 'Build an image x64 sac2016'
       inputs:
@@ -358,14 +359,14 @@ jobs:
         buildArguments: 'tag=2.2-nanoserver-sac2016'
         defaultContext: false
         context: '$(Build.StagingDirectory)'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-sac2016'
+        imageName: '$(imageName)-win-x64-sac2016'
     - task: Docker@1
       displayName: 'Push an image 1809'
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1809'
+        imageName: '$(imageName)-win-x64-1809'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - task: Docker@1
       displayName: 'Push an image 1803'
@@ -373,7 +374,7 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1803'
+        imageName: '$(imageName)-win-x64-1803'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - task: Docker@1
       displayName: 'Push an image 1709'
@@ -381,7 +382,7 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-1709'
+        imageName: '$(imageName)-win-x64-1709'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - task: Docker@1
       displayName: 'Push an image sac2016'
@@ -389,7 +390,7 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
-        imageName: 'sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)-win-x64-sac2016'
+        imageName: '$(imageName)-win-x64-sac2016'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - powershell: |
         # Write your powershell commands here.
