@@ -166,7 +166,7 @@ jobs:
         artifactName: 'linux-arm'
         targetPath: '$(Build.StagingDirectory)'
 
-- job: linux-x64
+- job: linux_x64
   pool:
     vmImage: ubuntu-16.04
   steps:
