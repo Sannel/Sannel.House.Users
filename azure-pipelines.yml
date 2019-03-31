@@ -384,14 +384,6 @@ jobs:
         command: 'Push an image'
         imageName: '$(imageName)-win-x64-1709'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
-    - task: Docker@1
-      displayName: 'Push an image sac2016'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(imageName)-win-x64-sac2016'
-      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - powershell: |
         # Write your powershell commands here.
         
