@@ -350,16 +350,6 @@ jobs:
         defaultContext: false
         context: '$(Build.StagingDirectory)'
         imageName: '$(imageName)-win-x64-1709'
-    - task: Docker@0
-      displayName: 'Build an image x64 sac2016'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryConnection: 'Docker Hub'
-        dockerFile: '$(Build.StagingDirectory)/Dockerfile'
-        buildArguments: 'tag=2.2-nanoserver-sac2016'
-        defaultContext: false
-        context: '$(Build.StagingDirectory)'
-        imageName: '$(imageName)-win-x64-sac2016'
     - task: Docker@1
       displayName: 'Push an image 1809'
       inputs:
