@@ -14,7 +14,7 @@ namespace Sannel.House.Users.Data.Sqlite.Migrations.IdentityServer.PersistedGran
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
                 {
@@ -45,9 +45,6 @@ namespace Sannel.House.Users.Data.Sqlite.Migrations.IdentityServer.PersistedGran
                     b.HasKey("UserCode");
 
                     b.HasIndex("DeviceCode")
-                        .IsUnique();
-
-                    b.HasIndex("UserCode")
                         .IsUnique();
 
                     b.ToTable("DeviceCodes");

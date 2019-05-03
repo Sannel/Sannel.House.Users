@@ -14,7 +14,7 @@ namespace Sannel.House.Users.Data.MySql.Migrations.IdentityServer.PersistedGrant
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -46,9 +46,6 @@ namespace Sannel.House.Users.Data.MySql.Migrations.IdentityServer.PersistedGrant
                     b.HasKey("UserCode");
 
                     b.HasIndex("DeviceCode")
-                        .IsUnique();
-
-                    b.HasIndex("UserCode")
                         .IsUnique();
 
                     b.ToTable("DeviceCodes");
