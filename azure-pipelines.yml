@@ -468,6 +468,6 @@ jobs:
     - task: PublishPipelineArtifact@0
       displayName: 'Publish Pipeline Artifact'
       inputs:
-        artifactName: 'win-x64'
+        artifactName: 'win-arm'
         targetPath: '$(Build.StagingDirectory)'
 

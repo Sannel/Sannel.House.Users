@@ -6,7 +6,7 @@ EXPOSE 8443
 COPY qemu-arm-static /usr/bin/
 COPY Sannel.House.Users/ .
 RUN ln -s  /var/run/secrets/kubernetes.io/serviceaccount/ca.crt /etc/ssl/certs/kubernetes.pem \
-    && useradd -m house \
+    && useradd -m house -u 1000 \
     && chown -R house /app \
     && rm -f /usr/bin/qemu-arm-static
 USER house
