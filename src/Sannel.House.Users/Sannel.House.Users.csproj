@@ -25,11 +25,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" PrivateAssets="All" />
-    <PackageReference Include="Sannel.House.Data" Version="201902.118.101-beta" />
+    <PackageReference Include="Sannel.House.Data" Version="0.5.137-beta" />
 	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
-	  <PackageReference Include="Sannel.House.Web" Version="201902.118.101-beta" />
+	  <PackageReference Include="Sannel.House.Web" Version="0.5.137-beta" />
   </ItemGroup>
 
   <ItemGroup>
