@@ -465,6 +465,13 @@ jobs:
         dockerRegistryConnection: 'Docker Hub'
         action: 'Run a Docker command'
         customCommand: 'build --build-arg tag=2.2-nanoserver-1809-arm32v7 -t $(imageName)-win-arm-1809 --isolation hyperv $(Build.StagingDirectory)'
+#    - task: Docker@0
+#      displayName: 'Build an image arm 1903'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryConnection: 'Docker Hub'
+#        action: 'Run a Docker command'
+#        customCommand: 'build --build-arg tag=2.2-nanoserver-1903-arm32v7 -t $(imageName)-win-arm-1903 --isolation hyperv $(Build.StagingDirectory)'
     - task: Docker@1
       displayName: 'Push an image 1809'
       inputs:
@@ -473,6 +480,14 @@ jobs:
         command: 'Push an image'
         imageName: '$(imageName)-win-arm-1809'
       condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+#    - task: Docker@1
+#      displayName: 'Push an image 1903'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryEndpoint: 'Docker Hub'
+#        command: 'Push an image'
+#        imageName: '$(imageName)-win-arm-1903'
+#      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - powershell: |
         # Write your powershell commands here.
         
