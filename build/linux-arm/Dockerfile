@@ -6,8 +6,9 @@ EXPOSE 8443
 COPY qemu-arm-static /usr/bin/
 COPY Sannel.House.Users/ .
 RUN ln -s  /var/run/secrets/kubernetes.io/serviceaccount/ca.crt /etc/ssl/certs/kubernetes.pem \
-    && useradd -m house \
-    && chown -R house /app \
+    && groupadd -g 1200 house \
+    && useradd -m house -u 1100 -g 1200 \
+    && chown -R house:house /app \
     && rm -f /usr/bin/qemu-arm-static
 USER house
 ENTRYPOINT ["dotnet", "Sannel.House.Users.dll"]
