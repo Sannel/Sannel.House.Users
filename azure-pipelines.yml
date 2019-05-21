@@ -323,13 +323,13 @@ jobs:
         
         copy-item -Force -Verbose build/windows/Dockerfile $(Build.StagingDirectory)/
       displayName: 'Prepare Items'
-    - task: Docker@0
-      displayName: 'Build an image x64 1903'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryConnection: 'Docker Hub'
-        action: 'Run a Docker command'
-        customCommand: 'build --build-arg tag=2.2-nanoserver-1903 -t $(imageName)-win-x64-1903 --isolation hyperv $(Build.StagingDirectory)'
+#    - task: Docker@0
+#      displayName: 'Build an image x64 1903'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryConnection: 'Docker Hub'
+#        action: 'Run a Docker command'
+#        customCommand: 'build --build-arg tag=2.2-nanoserver-1903 -t $(imageName)-win-x64-1903 --isolation hyperv $(Build.StagingDirectory)'
     - task: Docker@0
       displayName: 'Build an image x64 1809'
       inputs:
@@ -357,14 +357,14 @@ jobs:
         defaultContext: false
         context: '$(Build.StagingDirectory)'
         imageName: '$(imageName)-win-x64-1709'
-    - task: Docker@1
-      displayName: 'Push an image 1903'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(imageName)-win-x64-1903'
-      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+#    - task: Docker@1
+#      displayName: 'Push an image 1903'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryEndpoint: 'Docker Hub'
+#        command: 'Push an image'
+#        imageName: '$(imageName)-win-x64-1903'
+#      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - task: Docker@1
       displayName: 'Push an image 1809'
       inputs:
