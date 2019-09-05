@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UserSecretsId>aspnet-Sannel.House.Users-3DD475D4-A2DF-4D1C-A25B-57BB5071393A</UserSecretsId>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
     <DockerTargetOS>Windows</DockerTargetOS>
+    <DocumentationFile>bin\Sannel.House.Users.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,18 +23,17 @@
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.4.0" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="1.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" PrivateAssets="All" />
-    <PackageReference Include="Sannel.House.Data" Version="0.5.139-beta" />
-	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
-	  <PackageReference Include="Sannel.House.Web" Version="0.5.139-beta" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0-preview9.19424.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0-preview9.19423.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0-preview9.19423.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0-preview9-19453-02" PrivateAssets="All" />
+    <PackageReference Include="Sannel.House.Data" Version="0.5.184-beta" />
+	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-preview9" />
+	  <PackageReference Include="Sannel.House.Web" Version="0.5.184-beta" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Migrations\Sannel.House.Users.Data.MySql\Sannel.House.Users.Data.MySql.csproj" />
     <ProjectReference Include="..\Migrations\Sannel.House.Users.Data.PostgreSQL\Sannel.House.Users.Data.PostgreSQL.csproj" />
     <ProjectReference Include="..\Migrations\Sannel.House.Users.Data.Sqlite\Sannel.House.Users.Data.Sqlite.csproj" />
     <ProjectReference Include="..\Migrations\Sannel.House.Users.Data.SqlServer\Sannel.House.Users.Data.SqlServer.csproj" />

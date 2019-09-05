@@ -24,7 +24,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sannel.House.Users.Data.Sqlite;
 using Sannel.House.Users.Data.SqlServer;
-using Sannel.House.Users.Data.MySql;
 using Sannel.House.Users.Data.PostgreSQL;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.AccessTokenValidation;
@@ -39,6 +38,7 @@ using Microsoft.Extensions.Logging;
 using System.Data.Common;
 using Sannel.House.Data;
 using Sannel.House.Web;
+using Microsoft.Extensions.Hosting;
 
 namespace Sannel.House.Users
 {
@@ -70,8 +70,8 @@ namespace Sannel.House.Users
 						break;
 					case "MySql":
 					case "mysql":
-						options.ConfigureMySql(Configuration["Db:ConnectionString"]);
-						break;
+						//options.ConfigureMySql(Configuration["Db:ConnectionString"]);
+						throw new NotSupportedException("We are currently not supporting mysql as a db provider");
 
 					case "PostgreSQL":
 					case "postgresql":
@@ -88,7 +88,7 @@ namespace Sannel.House.Users
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
 
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+			services.AddControllers();
 
 			services.AddIdentityServer()
 				.AddSigningCredential(
@@ -155,7 +155,7 @@ namespace Sannel.House.Users
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider, ILogger<Startup> logger)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider, ILogger<Startup> logger)
 		{
 			provider.CheckAndInstallTrustedCertificate();
 			var p = Configuration["Db:Provider"];
@@ -183,7 +183,7 @@ namespace Sannel.House.Users
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseDatabaseErrorPage();
+//				app.UseDatabaseErrorPage();
 			}
 			else
 			{
@@ -192,16 +192,16 @@ namespace Sannel.House.Users
 			}
 
 			app.UseHttpsRedirection();
-			app.UseStaticFiles();
-			app.UseCookiePolicy();
 
 			app.UseIdentityServer();
 
-			app.UseMvc(routes =>
+			app.UseRouting();
+
+			app.UseCors();
+
+			app.UseEndpoints(endpoints =>
 			{
-				routes.MapRoute(
-					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
+				endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 			});
 
 			if (Configuration.GetValue<bool>("Db:SeedDb"))
