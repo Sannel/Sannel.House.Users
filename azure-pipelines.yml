@@ -117,12 +117,11 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y qemu qemu-user-static qemu-user binfmt-support
         Copy-Item -Verbose /usr/bin/qemu-arm-static $(Build.StagingDirectory)
-        ls /usr/bin/qemu*
-        which qemu-arm-static
+        ls $(Build.StagingDirectory)
         # Use the environment variables input below to pass secret variables to this script
       displayName: 'Install qemu'
     - task: DotNetCoreInstaller@0
-      displayName: 'Use .NET Core sdk 2.2'
+      displayName: 'Use .NET Core sdk $(sdk_version)'
       inputs:
         version: $(sdk_version)
     - task: DotNetCoreCLI@2
@@ -170,6 +169,7 @@ jobs:
         New-Item -Type File -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/.hold
         
         copy-item -Force -Verbose build/linux-arm/Dockerfile $(Build.StagingDirectory)/
+        ls $(Build.StagingDirectory)
       displayName: 'Prepare Items'
     - task: Docker@1
       displayName: 'Run an image '
