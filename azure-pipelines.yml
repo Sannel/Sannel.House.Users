@@ -518,27 +518,27 @@ jobs:
         
         copy-item -Force -Verbose build/windows/Dockerfile $(Build.StagingDirectory)/
       displayName: 'Prepare Items'
-#    - task: Docker@0
-#      displayName: 'Build an image x64 1903'
-#      inputs:
-#        containerregistrytype: 'Container Registry'
-#        dockerRegistryConnection: 'Docker Hub'
-#        action: 'Run a Docker command'
-#        customCommand: 'build --build-arg tag=2.2-nanoserver-1903 -t $(imageName)-win-x64-1903 --isolation hyperv $(Build.StagingDirectory)'
+    - task: Docker@0
+      displayName: 'Build an image x64 1903'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryConnection: 'Docker Hub'
+        action: 'Run a Docker command'
+        customCommand: 'build --build-arg tag=$(tagVersion)-nanoserver-1903 -t $(imageName)-win-x64-1903 --isolation hyperv $(Build.StagingDirectory)'
     - task: Docker@0
       displayName: 'Build an image x64 1809'
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryConnection: 'Docker Hub'
         action: 'Run a Docker command'
-        customCommand: 'build --build-arg tag=2.2-nanoserver-1809 -t $(imageName)-win-x64-1809 --isolation hyperv $(Build.StagingDirectory)'
+        customCommand: 'build --build-arg tag=$(tagVersion)-nanoserver-1809 -t $(imageName)-win-x64-1809 --isolation hyperv $(Build.StagingDirectory)'
     - task: Docker@0
       displayName: 'Build an image x64 1803'
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryConnection: 'Docker Hub'
         action: 'Run a Docker command'
-        customCommand: 'build --build-arg tag=2.2-nanoserver-1803 -t $(imageName)-win-x64-1803 --isolation hyperv $(Build.StagingDirectory)'
+        customCommand: 'build --build-arg tag=$(tagVersion)-nanoserver-1803 -t $(imageName)-win-x64-1803 --isolation hyperv $(Build.StagingDirectory)'
     - powershell: |
         docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1803.tar $(imageName)-win-x64-1803
         docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1809.tar $(imageName)-win-x64-1809
