@@ -117,6 +117,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y qemu qemu-user-static qemu-user binfmt-support
         Copy-Item -Verbose /usr/bin/qemu-arm-static $(Build.StagingDirectory)
+        ls /usr/bin/qemu*
+        which qemu-arm-static
         # Use the environment variables input below to pass secret variables to this script
       displayName: 'Install qemu'
     - task: DotNetCoreInstaller@0
