@@ -2,12 +2,10 @@ version: '3.6'
 
 services:
   users:
-    image: ${DOCKER_REGISTRY}${ImageName}:${BuildType}-${SANNEL_VERSION}-${SANNEL_ARCH}
+    image: sannel/house/users:dev
     build:
       context: .
       dockerfile: src/Sannel.House.Users/Dockerfile
-      args:
-        USER: "${USER}"
     ports:
       - "8443:8443"
       - "8080:8080"

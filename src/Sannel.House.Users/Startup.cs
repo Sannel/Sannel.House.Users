@@ -107,8 +107,9 @@ namespace Sannel.House.Users
 								break;
 							case "MySql":
 							case "mysql":
-								o.ConfigureMySql(Configuration["Db:ConnectionString"]);
-								break;
+								//o.ConfigureMySql(Configuration["Db:ConnectionString"]);
+								throw new NotSupportedException("We are currently not supporting mysql as a db provider");
+
 							case "PostgreSQL":
 							case "postgresql":
 								o.ConfigurePostgreSQL(Configuration["Db:ConnectionString"]);
@@ -133,8 +134,9 @@ namespace Sannel.House.Users
 								break;
 							case "MySql":
 							case "mysql":
-								o.ConfigureMySql(Configuration["Db:ConnectionString"]);
-								break;
+								//o.ConfigureMySql(Configuration["Db:ConnectionString"]);
+								throw new NotSupportedException("We are currently not supporting mysql as a db provider");
+
 							case "PostgreSQL":
 							case "postgresql":
 								o.ConfigurePostgreSQL(Configuration["Db:ConnectionString"]);
@@ -162,8 +164,8 @@ namespace Sannel.House.Users
 			{
 				var db = provider.GetService<ApplicationDbContext>();
 
-				if (string.Compare(p, "mysql", true) == 0
-					|| string.Compare(p, "sqlserver", true) == 0
+				if (/*string.Compare(p, "mysql", true) == 0
+					||*/ string.Compare(p, "sqlserver", true) == 0
 					|| string.Compare(p, "postgresql", true) == 0)
 				{
 					db.WaitForServer(logger);

@@ -3,8 +3,21 @@ trigger:
 - develop
 
 variables:
-  sdk_version: 2.2.204
-  imageName: sannel/house.users:$(Build.SourceBranchName)-$(Build.BuildId)
+  sdk_version: 3.0.100-preview9-014004
+  dockerRepositoryRoot: sannel
+  dockerRepositoryName: house.users
+  dockerTagBase: $(Build.SourceBranchName)-$(Build.BuildId)
+  imageName: $(dockerRepositoryRoot)/$(dockerRepositoryName):$(dockerTagBase)
+  projectFolder: Sannel.House.Users
+  mainProjectPath: src/$(projectFolder)/$(projectFolder).csproj
+  mainConfigPath: src/$(projectFolder)/app_config
+  tagVersion: 3.0
+  tagCodeName: buster
+  hasTests: false
+  disableLinux: false
+  disableArm64: false
+  disableWindows: false
+  disableOSX: false
 
 name: $(date:yyyy.MM.dd)$(rev:.rr)
 
@@ -12,6 +25,7 @@ jobs:
 - job: 'osx'
   pool:
     vmImage: macOS-10.13
+  condition: ne(variables['disableOSX'], 'true')
   steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Use .NET Core sdk 2.2'
@@ -21,7 +35,7 @@ jobs:
     displayName: 'dotnet restore'
     inputs:
       command: custom
-      projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+      projects: src/**/*.csproj
       custom: restore
       arguments: '-r osx-x64 --configfile .nuget/nuget.config'
       feedsToUse: config
@@ -30,13 +44,13 @@ jobs:
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build Release'
     inputs:
-      projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+      projects: $(mainProjectPath)
       arguments: '-r osx-x64 -c Release'
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build Debug'
     inputs:
-      projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+      projects: $(mainProjectPath)
       arguments: '-r osx-x64 -c Debug'
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   - task: DotNetCoreCLI@2
@@ -44,22 +58,47 @@ jobs:
     inputs:
       command: publish
       publishWebProjects: false
-      projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+      projects: $(mainProjectPath)
       arguments: '-r osx-x64 -o $(Build.StagingDirectory)'
       zipAfterPublish: false
-  - task: CopyFiles@2
-    displayName: 'Copy Files to: $(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet clean'
     inputs:
-      SourceFolder: 'src/Sannel.House.Users/app_config'
+      command: custom
+      projects: '**/*.csproj'
+      custom: clean
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet restore'
+    inputs:
+      command: custom
+      projects: '**/*Tests.csproj'
+      custom: restore
+      arguments: '-r osx-x64 --configfile .nuget/nuget.config'
+      feedsToUse: config
+      nugetConfigPath: .nuget/nuget.config
+      externalFeedCredentials: 'Sannel House MyGet'
+    condition: eq(variables['hasTests'], 'true')
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet test'
+    inputs:
+      projects: '**/*Tests.csproj'
+      command: test
+      arguments: '--collect "Code coverage"'
+      publishTestResults: true
+    condition: eq(variables['hasTests'], 'true')
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(Build.StagingDirectory)/$(projectFolder)/app_config/'
+    inputs:
+      SourceFolder: '$(mainConfigPath)'
       Contents: |
         **/*.json
         **/*.yml
         **/*.pfx
         **/*.crt
-      TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+      TargetFolder: '$(Build.StagingDirectory)/$(projectFolder)/app_config/'
   - powershell: |
-      New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
-      New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+      New-Item -Type Directory -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/
+      New-Item -Type File -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/.hold
     displayName: 'Prepare Items'
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Pipeline Artifact'
@@ -67,11 +106,11 @@ jobs:
       artifactName: 'osx-x64'
       targetPath: '$(Build.StagingDirectory)'
 
+
 - job: linux_arm
   pool:
     vmImage: ubuntu-16.04
-  dependsOn: osx
-  condition: succeeded('osx')
+  condition: ne(variables['disableLinux'], 'true')
   steps:
     - powershell: |
         # Write your commands here
@@ -88,7 +127,7 @@ jobs:
       displayName: 'dotnet restore'
       inputs:
         command: custom
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         custom: restore
         arguments: '-r linux-arm --configfile .nuget/nuget.config'
         feedsToUse: config
@@ -97,13 +136,13 @@ jobs:
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Release'
       inputs:
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r linux-arm -c Release'
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Debug'
       inputs:
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r linux-arm -c Debug'
       condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     - task: DotNetCoreCLI@2
@@ -111,22 +150,22 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: false
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r linux-arm -o $(Build.StagingDirectory)'
         zipAfterPublish: false
     - task: CopyFiles@2
-      displayName: 'Copy Files to: $(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+      displayName: 'Copy Files to: $(Build.StagingDirectory)/$(projectFolder)/app_config/'
       inputs:
-        SourceFolder: 'src/Sannel.House.Users/app_config'
+        SourceFolder: '$(mainConfigPath)'
         Contents: |
           **/*.json
           **/*.yml
           **/*.pfx
           **/*.crt
-        TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+        TargetFolder: '$(Build.StagingDirectory)/$(projectFolder)/app_config/'
     - powershell: |
-        New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
-        New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+        New-Item -Type Directory -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/
+        New-Item -Type File -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/.hold
         
         copy-item -Force -Verbose build/linux-arm/Dockerfile $(Build.StagingDirectory)/
       displayName: 'Prepare Items'
@@ -145,18 +184,15 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryConnection: 'Docker Hub'
         dockerFile: '$(Build.StagingDirectory)/Dockerfile'
-        buildArguments: 'tag=2.2-stretch-slim-arm32v7'
+        buildArguments: 'tag=$(tagVersion)-$(tagCodeName)-slim-arm32v7'
         defaultContext: false
         context: '$(Build.StagingDirectory)'
         imageName: '$(imageName)-linux-arm32v7'
-    - task: Docker@1
-      displayName: 'Push an image'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(imageName)-linux-arm32v7'
-      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+    - powershell: |
+        $img = "$(imageName)".ToLower()
+        docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).linux.arm32v7.tar "${img}-linux-arm32v7"
+        bzip2 -9 $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).linux.arm32v7.tar
+      displayName: 'export image'
     - powershell: |
         # Write your powershell commands here.
         
@@ -171,11 +207,117 @@ jobs:
         artifactName: 'linux-arm'
         targetPath: '$(Build.StagingDirectory)'
 
+- job: linux_arm64
+  pool:
+    vmImage: ubuntu-16.04
+  condition: and(ne(variables['disableLinux'], 'true'), ne(variables['disableArm64'], 'true'))
+  steps:
+    - powershell: |
+        # Write your commands here
+        sudo apt-get update
+        sudo apt-get install -y qemu qemu-user-static qemu-user binfmt-support
+        Copy-Item -Verbose /usr/bin/qemu-aarch64-static $(Build.StagingDirectory)
+        # Use the environment variables input below to pass secret variables to this script
+      displayName: 'Install qemu'
+    - task: DotNetCoreInstaller@0
+      displayName: 'Use .NET Core sdk $(sdk_version)'
+      inputs:
+        version: $(sdk_version)
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: custom
+        projects: $(mainProjectPath)
+        custom: restore
+        arguments: '-r linux-arm64 --configfile .nuget/nuget.config'
+        feedsToUse: config
+        nugetConfigPath: .nuget/nuget.config
+        externalFeedCredentials: 'Sannel House MyGet'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build Release'
+      inputs:
+        projects: $(mainProjectPath)
+        arguments: '-r linux-arm64 -c Release'
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build Debug'
+      inputs:
+        projects: $(mainProjectPath)
+        arguments: '-r linux-arm64 -c Debug'
+      condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet publish'
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: $(mainProjectPath)
+        arguments: '-r linux-arm64 -o $(Build.StagingDirectory)'
+        zipAfterPublish: false
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.StagingDirectory)/$(projectFolder)/app_config/'
+      inputs:
+        SourceFolder: '$(mainConfigPath)'
+        Contents: |
+          **/*.json
+          **/*.yml
+          **/*.pfx
+          **/*.crt
+        TargetFolder: '$(Build.StagingDirectory)/$(projectFolder)/app_config/'
+    - powershell: |
+        New-Item -Type Directory -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/
+        New-Item -Type File -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/.hold
+        
+        copy-item -Force -Verbose build/linux-arm64/Dockerfile $(Build.StagingDirectory)/
+      displayName: 'Prepare Items'
+    - task: Docker@1
+      displayName: 'Run an image '
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Run an image'
+        arguments: '--rm --privileged'
+        imageName: ' multiarch/qemu-user-static:register'
+        containerCommand: '--reset'
+    - task: Docker@0
+      displayName: 'Build an image arm'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryConnection: 'Docker Hub'
+        dockerFile: '$(Build.StagingDirectory)/Dockerfile'
+        buildArguments: 'tag=$(tagVersion)-$(tagCodeName)-slim-arm64v8'
+        defaultContext: false
+        context: '$(Build.StagingDirectory)'
+        imageName: '$(imageName)-linux-arm64v8'
+    - powershell: |
+        $img = "$(imageName)".ToLower()
+        docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).linux.arm64v8.tar "${img}-linux-arm64v8"
+        bzip2 -9 $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).linux.arm64v8.tar
+      displayName: 'export image'
+#    - task: Docker@1
+#      displayName: 'Push an image'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryEndpoint: 'Docker Hub'
+#        command: 'Push an image'
+#        imageName: '$(imageName)-linux-arm32v7'
+    - powershell: |
+        # Write your powershell commands here.
+        
+        Remove-Item -Force $(Build.StagingDirectory)/Dockerfile*
+        Remove-Item -Force $(Build.StagingDirectory)/qemu*
+        
+        # Use the environment variables input below to pass secret variables to this script.
+      displayName: 'clean up copy'
+    - task: PublishPipelineArtifact@0
+      displayName: 'Publish Pipeline Artifact'
+      inputs:
+        artifactName: 'linux-arm64'
+        targetPath: '$(Build.StagingDirectory)'
+
 - job: linux_x64
   pool:
     vmImage: ubuntu-16.04
-  dependsOn: linux_arm
-  condition: succeeded('linux_arm')
+  condition: ne(variables['disableLinux'], 'true')
   steps:
     - task: DotNetCoreInstaller@0
       displayName: 'Use .NET Core sdk $(sdk_version)'
@@ -185,7 +327,7 @@ jobs:
       displayName: 'dotnet restore'
       inputs:
         command: custom
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         custom: restore
         arguments: '-r linux-x64 --configfile .nuget/nuget.config'
         feedsToUse: config
@@ -195,14 +337,14 @@ jobs:
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Release'
       inputs:
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r linux-x64 -c Release'
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Debug'
       inputs:
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r linux-x64 -c Debug'
       condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
@@ -211,24 +353,49 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: false
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r linux-x64 -o $(Build.StagingDirectory)'
         zipAfterPublish: false
 
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet clean'
       inputs:
-        SourceFolder: 'src/Sannel.House.Users/app_config'
+        command: custom
+        projects: '**/*.csproj'
+        custom: clean
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: custom
+        projects: '**/*Tests.csproj'
+        custom: restore
+        arguments: '-r linux-x64 --configfile .nuget/nuget.config'
+        feedsToUse: config
+        nugetConfigPath: .nuget/nuget.config
+        externalFeedCredentials: 'Sannel House MyGet'
+      condition: eq(variables['hasTests'], 'true')
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet test'
+      inputs:
+        projects: '**/*Tests.csproj'
+        command: test
+        arguments: '--collect "Code coverage"'
+        publishTestResults: true
+      condition: eq(variables['hasTests'], 'true')
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.StagingDirectory)/$(projectFolder)/app_config/'
+      inputs:
+        SourceFolder: '$(mainConfigPath)'
         Contents: |
           **/*.json
           **/*.yml
           **/*.pfx
           **/*.crt
-        TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+        TargetFolder: '$(Build.StagingDirectory)/$(projectFolder)/app_config/'
 
     - powershell: |
-        New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
-        New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+        New-Item -Type Directory -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/
+        New-Item -Type File -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/.hold
         
         copy-item -Force -Verbose build/linux-x64/Dockerfile $(Build.StagingDirectory)/
       displayName: 'Prepare Items'
@@ -239,19 +406,23 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryConnection: 'Docker Hub'
         dockerFile: '$(Build.StagingDirectory)/Dockerfile'
-        buildArguments: 'tag=2.2'
+        buildArguments: 'tag=$(tagVersion)'
         defaultContext: false
         context: '$(Build.StagingDirectory)'
         imageName: '$(imageName)-linux-x64'
-
-    - task: Docker@1
-      displayName: 'Push an image'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(imageName)-linux-x64'
-      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+    - powershell: |
+        $img = "$(imageName)".ToLower()
+        docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).linux.x64.tar "${img}-linux-x64"
+        bzip2 -9 $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).linux.x64.tar
+      displayName: 'export image'
+#    - task: Docker@1
+#      displayName: 'Push an image'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryEndpoint: 'Docker Hub'
+#        command: 'Push an image'
+#        imageName: '$(imageName)-linux-x64'
+#      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
 
     - powershell: |
         # Write your powershell commands here.
@@ -270,8 +441,7 @@ jobs:
 - job: windows_x64
   pool:
     vmImage: windows-2019
-  dependsOn: linux_x64
-  condition: succeeded('linux_x64')
+  condition: ne(variables['disableWindows'], 'true')
   steps:
     - task: DotNetCoreInstaller@0
       displayName: 'Use .NET Core sdk $(sdk_version)'
@@ -281,7 +451,7 @@ jobs:
       displayName: 'dotnet restore'
       inputs:
         command: custom
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         custom: restore
         arguments: '-r win-x64 --configfile .nuget/nuget.config'
         feedsToUse: config
@@ -290,13 +460,13 @@ jobs:
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Release'
       inputs:
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r win-x64 -c Release'
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Debug'
       inputs:
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r win-x64 -c Debug'
       condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     - task: DotNetCoreCLI@2
@@ -304,22 +474,47 @@ jobs:
       inputs:
         command: publish
         publishWebProjects: false
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r win-x64 -o $(Build.StagingDirectory)'
         zipAfterPublish: false
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet clean'
       inputs:
-        SourceFolder: 'src/Sannel.House.Users/app_config'
+        command: custom
+        projects: '**/*.csproj'
+        custom: clean
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: custom
+        projects: '**/*Tests.csproj'
+        custom: restore
+        arguments: '-r win-x64 --configfile .nuget/nuget.config'
+        feedsToUse: config
+        nugetConfigPath: .nuget/nuget.config
+        externalFeedCredentials: 'Sannel House MyGet'
+      condition: eq(variables['hasTests'], 'true')
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet test'
+      inputs:
+        projects: '**/*Tests.csproj'
+        command: test
+        arguments: '--collect "Code coverage"'
+        publishTestResults: true
+      condition: eq(variables['hasTests'], 'true')
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.StagingDirectory)/$(projectFolder)/app_config/'
+      inputs:
+        SourceFolder: '$(mainConfigPath)'
         Contents: |
           **/*.json
           **/*.yml
           **/*.pfx
           **/*.crt
-        TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+        TargetFolder: '$(Build.StagingDirectory)/$(projectFolder)/app_config/'
     - powershell: |
-        New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
-        New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+        New-Item -Type Directory -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/
+        New-Item -Type File -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/.hold
         
         copy-item -Force -Verbose build/windows/Dockerfile $(Build.StagingDirectory)/
       displayName: 'Prepare Items'
@@ -342,21 +537,33 @@ jobs:
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryConnection: 'Docker Hub'
-        dockerFile: '$(Build.StagingDirectory)/Dockerfile'
-        buildArguments: 'tag=2.2-nanoserver-1803'
-        defaultContext: false
-        context: '$(Build.StagingDirectory)'
-        imageName: '$(imageName)-win-x64-1803'
-    - task: Docker@0
-      displayName: 'Build an image x64 1709'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryConnection: 'Docker Hub'
-        dockerFile: '$(Build.StagingDirectory)/Dockerfile'
-        buildArguments: 'tag=2.2-nanoserver-1709'
-        defaultContext: false
-        context: '$(Build.StagingDirectory)'
-        imageName: '$(imageName)-win-x64-1709'
+        action: 'Run a Docker command'
+        customCommand: 'build --build-arg tag=2.2-nanoserver-1803 -t $(imageName)-win-x64-1803 --isolation hyperv $(Build.StagingDirectory)'
+    - powershell: |
+        docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1803.tar $(imageName)-win-x64-1803
+        docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1809.tar $(imageName)-win-x64-1809
+        Compress-Archive $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1803.tar -DestinationPath $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1803.tar.zip
+        Compress-Archive $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1809.tar -DestinationPath $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1809.tar.zip
+        Remove-Item $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1803.tar 
+        Remove-Item $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.x64.1809.tar 
+      displayName: 'export images'
+
+#    - powershell: |
+#        docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).$(dockerTagBase).win.x64.1903.tar $(imageName)-win-x64-1903
+#        Compress-Archive $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).$(dockerTagBase).win.x64.1903.tar -DestinationPath $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).$(dockerTagBase).win.x64.1903.tar.zip
+#        Remove-Item $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).$(dockerTagBase).win.x64.1903.tar 
+#      displayName: 'export 1903'
+
+#    - task: Docker@0 #1709 is no longer supported by dotnet core images
+#      displayName: 'Build an image x64 1709'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryConnection: 'Docker Hub'
+#        dockerFile: '$(Build.StagingDirectory)/Dockerfile'
+#        buildArguments: 'tag=2.2-nanoserver-1709'
+#        defaultContext: false
+#        context: '$(Build.StagingDirectory)'
+#        imageName: '$(imageName)-win-x64-1709'
 #    - task: Docker@1
 #      displayName: 'Push an image 1903'
 #      inputs:
@@ -365,30 +572,30 @@ jobs:
 #        command: 'Push an image'
 #        imageName: '$(imageName)-win-x64-1903'
 #      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
-    - task: Docker@1
-      displayName: 'Push an image 1809'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(imageName)-win-x64-1809'
-      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
-    - task: Docker@1
-      displayName: 'Push an image 1803'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(imageName)-win-x64-1803'
-      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
-    - task: Docker@1
-      displayName: 'Push an image 1709'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(imageName)-win-x64-1709'
-      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+#    - task: Docker@1
+#      displayName: 'Push an image 1809'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryEndpoint: 'Docker Hub'
+#        command: 'Push an image'
+#        imageName: '$(imageName)-win-x64-1809'
+#      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+#    - task: Docker@1
+#      displayName: 'Push an image 1803'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryEndpoint: 'Docker Hub'
+#        command: 'Push an image'
+#        imageName: '$(imageName)-win-x64-1803'
+#      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+#    - task: Docker@1
+#      displayName: 'Push an image 1709'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryEndpoint: 'Docker Hub'
+#        command: 'Push an image'
+#        imageName: '$(imageName)-win-x64-1709'
+#      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
     - powershell: |
         # Write your powershell commands here.
         
@@ -405,8 +612,7 @@ jobs:
 - job: windows_arm
   pool:
     vmImage: windows-2019
-  dependsOn: windows_x64
-  condition: succeeded('windows_x64')
+  condition: ne(variables['disableWindows'], 'true')
   steps:
     - task: DotNetCoreInstaller@0
       displayName: 'Use .NET Core sdk $(sdk_version)'
@@ -416,7 +622,7 @@ jobs:
       displayName: 'dotnet restore'
       inputs:
         command: custom
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         custom: restore
         arguments: '-r win-arm --configfile .nuget/nuget.config'
         feedsToUse: config
@@ -425,36 +631,36 @@ jobs:
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Release'
       inputs:
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r win-arm -c Release'
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build Debug'
       inputs:
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
-        arguments: '-r win-x64 -c Debug'
+        projects: $(mainProjectPath)
+        arguments: '-r win-arm -c Debug'
       condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     - task: DotNetCoreCLI@2
       displayName: 'dotnet publish'
       inputs:
         command: publish
         publishWebProjects: false
-        projects: src/Sannel.House.Users/Sannel.House.Users.csproj
+        projects: $(mainProjectPath)
         arguments: '-r win-arm -o $(Build.StagingDirectory)'
         zipAfterPublish: false
     - task: CopyFiles@2
-      displayName: 'Copy Files to: $(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+      displayName: 'Copy Files to: $(Build.StagingDirectory)/$(projectFolder)/app_config/'
       inputs:
-        SourceFolder: 'src/Sannel.House.Users/app_config'
+        SourceFolder: '$(mainConfigPath)'
         Contents: |
           **/*.json
           **/*.yml
           **/*.pfx
           **/*.crt
-        TargetFolder: '$(Build.StagingDirectory)/Sannel.House.Users/app_config/'
+        TargetFolder: '$(Build.StagingDirectory)/$(projectFolder)/app_config/'
     - powershell: |
-        New-Item -Type Directory -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/
-        New-Item -Type File -Force $(Build.StagingDirectory)/Sannel.House.Users/app_data/.hold
+        New-Item -Type Directory -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/
+        New-Item -Type File -Force $(Build.StagingDirectory)/$(projectFolder)/app_data/.hold
         
         copy-item -Force -Verbose build/windows/Dockerfile $(Build.StagingDirectory)/
       displayName: 'Prepare Items'
@@ -472,14 +678,19 @@ jobs:
 #        dockerRegistryConnection: 'Docker Hub'
 #        action: 'Run a Docker command'
 #        customCommand: 'build --build-arg tag=2.2-nanoserver-1903-arm32v7 -t $(imageName)-win-arm-1903 --isolation hyperv $(Build.StagingDirectory)'
-    - task: Docker@1
-      displayName: 'Push an image 1809'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(imageName)-win-arm-1809'
-      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
+    - powershell: |
+        docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.arm.1809.tar $(imageName)-win-arm-1809
+        Compress-Archive $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.arm.1809.tar -DestinationPath $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.arm.1809.tar.zip
+        Remove-Item $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.arm.1809.tar 
+      displayName: 'export images'
+#    - task: Docker@1
+#      displayName: 'Push an image 1809'
+#      inputs:
+#        containerregistrytype: 'Container Registry'
+#        dockerRegistryEndpoint: 'Docker Hub'
+#        command: 'Push an image'
+#        imageName: '$(imageName)-win-arm-1809'
+#      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
 #    - task: Docker@1
 #      displayName: 'Push an image 1903'
 #      inputs:
@@ -500,4 +711,5 @@ jobs:
       inputs:
         artifactName: 'win-arm'
         targetPath: '$(Build.StagingDirectory)'
+
 

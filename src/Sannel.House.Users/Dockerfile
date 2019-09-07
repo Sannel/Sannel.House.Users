@@ -1,7 +1,5 @@
-#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
-#For more information, please see https://aka.ms/containercompat
-ARG tag=2.2
-ARG sdk_tag=2.2
+ARG tag=3.0
+ARG sdk_tag=3.0
 FROM mcr.microsoft.com/dotnet/core/runtime:${tag} AS base
 WORKDIR /app
 EXPOSE 8080
