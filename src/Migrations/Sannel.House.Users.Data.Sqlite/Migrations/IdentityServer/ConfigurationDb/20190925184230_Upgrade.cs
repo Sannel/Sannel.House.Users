@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Sannel.House.Users.Data.Sqlite.Migrations.IdentityServer.ConfigurationDb
 {
-    public partial class Inital : Migration
+    public partial class Upgrade : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -1,6 +1,6 @@
 ARG tag=3.0
 ARG sdk_tag=3.0
-FROM mcr.microsoft.com/dotnet/core/runtime:${tag} AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:${tag} AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8443
