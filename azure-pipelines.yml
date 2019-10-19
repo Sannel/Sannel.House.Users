@@ -693,7 +693,7 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryConnection: 'Docker Hub'
         action: 'Run a Docker command'
-        customCommand: 'build --build-arg tag=2.2-nanoserver-1809-arm32v7 -t $(imageName)-win-arm-1809 --isolation hyperv $(Build.StagingDirectory)'
+        customCommand: 'build --build-arg tag=$(tagVersion)-nanoserver-1809-arm32v7 -t $(imageName)-win-arm-1809 --isolation hyperv $(Build.StagingDirectory)'
     - powershell: |
         docker save -o $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.arm.1809.tar $(imageName)-win-arm-1809
         Compress-Archive $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.arm.1809.tar -DestinationPath $(Build.StagingDirectory)/$(dockerRepositoryRoot).$(dockerRepositoryName).win.arm.1809.tar.zip
