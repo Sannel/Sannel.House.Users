@@ -64,12 +64,6 @@ jobs:
       arguments: '-r osx-x64 -o $(Build.StagingDirectory)'
       zipAfterPublish: false
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet clean'
-    inputs:
-      command: custom
-      projects: '**/*.csproj'
-      custom: clean
-  - task: DotNetCoreCLI@2
     displayName: 'dotnet restore'
     inputs:
       command: custom
@@ -111,7 +105,7 @@ jobs:
 
 - job: linux_arm
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   condition: ne(variables['disableLinux'], 'true')
   steps:
     - task: UseDotNet@2
@@ -213,7 +207,7 @@ jobs:
 
 - job: linux_arm64
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   condition: and(ne(variables['disableLinux'], 'true'), ne(variables['disableArm64'], 'true'))
   steps:
     - task: UseDotNet@2
@@ -315,7 +309,7 @@ jobs:
 
 - job: linux_x64
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   condition: ne(variables['disableLinux'], 'true')
   steps:
     - task: UseDotNet@2
@@ -358,12 +352,6 @@ jobs:
         arguments: '-r linux-x64 -o $(Build.StagingDirectory)'
         zipAfterPublish: false
 
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet clean'
-      inputs:
-        command: custom
-        projects: '**/*.csproj'
-        custom: clean
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
@@ -472,12 +460,6 @@ jobs:
         projects: $(mainProjectPath)
         arguments: '-r win-x64 -o $(Build.StagingDirectory)'
         zipAfterPublish: false
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet clean'
-      inputs:
-        command: custom
-        projects: '**/*.csproj'
-        custom: clean
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
@@ -588,12 +570,6 @@ jobs:
         projects: $(mainProjectPath)
         arguments: '-r win-x64 -o $(Build.StagingDirectory)'
         zipAfterPublish: false
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet clean'
-      inputs:
-        command: custom
-        projects: '**/*.csproj'
-        custom: clean
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
