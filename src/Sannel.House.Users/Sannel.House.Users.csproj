@@ -29,9 +29,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" PrivateAssets="All" />
-    <PackageReference Include="Sannel.House.Data" Version="0.5.184-beta" />
-	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-preview9" />
-	  <PackageReference Include="Sannel.House.Web" Version="0.5.184-beta" />
+    <PackageReference Include="Sannel.House.Data" Version="0.5.321-beta" />
+	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.1" />
+	  <PackageReference Include="Sannel.House.Web" Version="0.5.321-beta" />
   </ItemGroup>
 
   <ItemGroup>

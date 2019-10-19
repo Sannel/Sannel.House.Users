@@ -3,7 +3,7 @@ trigger:
 - develop
 
 variables:
-  sdk_version: 3.0.100-preview9-014004
+  sdk_version: 3.0.x
   dockerRepositoryRoot: sannel
   dockerRepositoryName: house.users
   dockerTagBase: $(Build.SourceBranchName)-$(Build.BuildId)
@@ -28,7 +28,7 @@ jobs:
   condition: ne(variables['disableOSX'], 'true')
   steps:
   - task: DotNetCoreInstaller@0
-    displayName: 'Use .NET Core sdk 2.2'
+    displayName: 'Use .NET Core sdk $(sdk_version)'
     inputs:
       version: $(sdk_version)
   - task: DotNetCoreCLI@2
