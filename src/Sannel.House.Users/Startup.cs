@@ -39,19 +39,46 @@ using System.Data.Common;
 using Sannel.House.Data;
 using Sannel.House.Web;
 using Microsoft.Extensions.Hosting;
+using System.Text.RegularExpressions;
 
 namespace Sannel.House.Users
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Startup
 	{
+		/// <summary>
+		/// The replacement regex
+		/// </summary>
+		public static Regex ReplacementRegex = new Regex(
+			"\\$\\{(?<key>[a-zA-Z0-9_\\-:]+)\\}",
+			RegexOptions.CultureInvariant
+			| RegexOptions.Compiled
+		);
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Startup"/> class.
+		/// </summary>
+		/// <param name="configuration">The configuration.</param>
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
 		}
 
+		/// <summary>
+		/// Gets the configuration.
+		/// </summary>
+		/// <value>
+		/// The configuration.
+		/// </value>
 		public IConfiguration Configuration { get; }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
+		/// <summary>
+		/// Configures the services.
+		/// </summary>
+		/// <param name="services">The services.</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
 			//services.Configure<CookiePolicyOptions>(options =>
@@ -61,12 +88,29 @@ namespace Sannel.House.Users
 			//	options.MinimumSameSitePolicy = SameSiteMode.None;
 			//});
 
+			var connectionString = Configuration["Db:ConnectionString"];
+			if(string.IsNullOrWhiteSpace(connectionString))
+			{
+				throw new ArgumentNullException("Db:ConnectionString", "Db:ConnectionString is required");
+			}
+
+			connectionString = ReplacementRegex.Replace(connectionString, (Match target) =>
+			{
+				if(target.Groups.ContainsKey("key"))
+				{
+					var group = target.Groups["key"];
+					return Configuration[group.Value];
+				}
+
+				return target.Value;
+			});
+
 			services.AddDbContext<ApplicationDbContext>(options => {
 				switch (Configuration["Db:Provider"])
 				{
 					case "sqlserver":
 					case "SqlServer":
-						options.ConfigureSqlServer(Configuration["Db:ConnectionString"]);
+						options.ConfigureSqlServer(connectionString);
 						break;
 					case "MySql":
 					case "mysql":
@@ -75,12 +119,12 @@ namespace Sannel.House.Users
 
 					case "PostgreSQL":
 					case "postgresql":
-						options.ConfigurePostgreSQL(Configuration["Db:ConnectionString"]);
+						options.ConfigurePostgreSQL(connectionString);
 						break;
 
 					case "sqlite":
 					default:
-						options.ConfigureSqlite(Configuration["Db:ConnectionString"]);
+						options.ConfigureSqlite(connectionString);
 						break;
 				}
 			});
@@ -97,53 +141,54 @@ namespace Sannel.House.Users
 						Configuration["IdentityServer:Certificate:Password"]))
 				.AddConfigurationStore(options =>
 				{
-					options.ConfigureDbContext = o =>
+					options.ConfigureDbContext = options =>
 					{
 						switch (Configuration["Db:Provider"])
 						{
 							case "sqlserver":
 							case "SqlServer":
-								o.ConfigureSqlServer(Configuration["Db:ConnectionString"]);
+								options.ConfigureSqlServer(connectionString);
 								break;
 							case "MySql":
 							case "mysql":
-								//o.ConfigureMySql(Configuration["Db:ConnectionString"]);
+								//options.ConfigureMySql(Configuration["Db:ConnectionString"]);
 								throw new NotSupportedException("We are currently not supporting mysql as a db provider");
 
 							case "PostgreSQL":
 							case "postgresql":
-								o.ConfigurePostgreSQL(Configuration["Db:ConnectionString"]);
+								options.ConfigurePostgreSQL(connectionString);
 								break;
 
 							case "sqlite":
 							default:
-								o.ConfigureSqlite(Configuration["Db:ConnectionString"]);
+								options.ConfigureSqlite(connectionString);
 								break;
 						}
 					};
 				})
 				.AddOperationalStore(options =>
 				{
-					options.ConfigureDbContext = o =>
+					options.ConfigureDbContext = options =>
 					{
 						switch (Configuration["Db:Provider"])
 						{
 							case "sqlserver":
 							case "SqlServer":
-								o.ConfigureSqlServer(Configuration["Db:ConnectionString"]);
+								options.ConfigureSqlServer(connectionString);
 								break;
 							case "MySql":
 							case "mysql":
-								//o.ConfigureMySql(Configuration["Db:ConnectionString"]);
+								//options.ConfigureMySql(Configuration["Db:ConnectionString"]);
 								throw new NotSupportedException("We are currently not supporting mysql as a db provider");
 
 							case "PostgreSQL":
 							case "postgresql":
-								o.ConfigurePostgreSQL(Configuration["Db:ConnectionString"]);
+								options.ConfigurePostgreSQL(connectionString);
 								break;
+
 							case "sqlite":
 							default:
-								o.ConfigureSqlite(Configuration["Db:ConnectionString"]);
+								options.ConfigureSqlite(connectionString);
 								break;
 						}
 					};

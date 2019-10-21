@@ -20,13 +20,25 @@ using Microsoft.Extensions.Logging;
 
 namespace Sannel.House.Users
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Program
 	{
+		/// <summary>
+		/// Defines the entry point of the application.
+		/// </summary>
+		/// <param name="args">The arguments.</param>
 		public static void Main(string[] args)
 		{
 			CreateWebHostBuilder(args).Build().Run();
 		}
 
+		/// <summary>
+		/// Creates the web host builder.
+		/// </summary>
+		/// <param name="args">The arguments.</param>
+		/// <returns></returns>
 		public static IWebHostBuilder CreateWebHostBuilder(string[] args)
 		{
 			return WebHost.CreateDefaultBuilder(args)
@@ -34,6 +46,9 @@ namespace Sannel.House.Users
 				{
 					c.AddJsonFile(Path.Combine("app_config", "appsettings.json"), true, true);
 					c.AddYamlFile(Path.Combine("app_config", "appsettings.yml"), true, true);
+					c.AddJsonFile(Path.Combine("app_config", "shared", "appsettings.json"), true, true);
+					c.AddYamlFile(Path.Combine("app_config", "shared", "appsettings.yml"), true, true);
+					c.AddEnvironmentVariables();
 				})
 				.UseStartup<Startup>();
 		}
