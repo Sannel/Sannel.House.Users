@@ -199,6 +199,7 @@ namespace Sannel.House.Users
 				.AddAspNetIdentity<IdentityUser>();
 
 			services.AddScoped<DataSeeder>();
+			services.AddHealthChecks();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -237,6 +238,8 @@ namespace Sannel.House.Users
 				app.UseExceptionHandler("/Home/Error");
 				app.UseHsts();
 			}
+
+			app.UseHealthChecks("/health");
 
 			app.UseHttpsRedirection();
 
