@@ -236,7 +236,7 @@ namespace Sannel.House.Users
 			else
 			{
 				app.UseExceptionHandler("/Home/Error");
-				app.UseHsts();
+				//app.UseHsts();
 			}
 
 			app.UseHealthChecks("/health");
