@@ -241,7 +241,7 @@ namespace Sannel.House.Users
 
 			app.UseHealthChecks("/health");
 
-			app.UseHttpsRedirection();
+			//app.UseHttpsRedirection();
 
 			app.UseIdentityServer();
 
