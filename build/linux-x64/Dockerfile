@@ -8,5 +8,5 @@ RUN ln -s  /var/run/secrets/kubernetes.io/serviceaccount/ca.crt /etc/ssl/certs/k
     && groupadd -g 1200 house \
     && useradd -m house -u 1100 -g 1200 \
     && chown -R house:house /app
-USER house
+USER 1200
 ENTRYPOINT ["dotnet", "Sannel.House.Users.dll"]
