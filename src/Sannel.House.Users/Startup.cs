@@ -134,7 +134,24 @@ namespace Sannel.House.Users
 
 			services.AddControllers();
 
-			services.AddIdentityServer()
+			services.AddIdentityServer(i =>
+			{
+				// documents for adding more options: http://docs.identityserver.io/en/latest/reference/options.html
+				if(!string.IsNullOrWhiteSpace(Configuration["IdentityServer:IssuerUri"]))
+				{
+					i.IssuerUri = Configuration["IdentityServer:IssuerUri"];
+				}
+
+				if (!string.IsNullOrWhiteSpace(Configuration["IdentityServer:PublicOrigin"]))
+				{
+					i.PublicOrigin = Configuration["IdentityServer:PublicOrigin"];
+				}
+
+				if(!string.IsNullOrWhiteSpace(Configuration["IdentityServer:AccessTokenJwtType"]))
+				{
+					i.AccessTokenJwtType = Configuration["IdentityServer:AccessTokenJwtType"];
+				}
+			})
 				.AddSigningCredential(
 					new X509Certificate2(
 						Configuration["IdentityServer:Certificate:Path"],
