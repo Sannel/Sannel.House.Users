@@ -49,15 +49,6 @@ namespace Sannel.House.Users
 	public class Startup
 	{
 		/// <summary>
-		/// The replacement regex
-		/// </summary>
-		public static Regex ReplacementRegex = new Regex(
-			"\\$\\{(?<key>[a-zA-Z0-9_\\-:]+)\\}",
-			RegexOptions.CultureInvariant
-			| RegexOptions.Compiled
-		);
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="Startup"/> class.
 		/// </summary>
 		/// <param name="configuration">The configuration.</param>
@@ -88,22 +79,11 @@ namespace Sannel.House.Users
 			//	options.MinimumSameSitePolicy = SameSiteMode.None;
 			//});
 
-			var connectionString = Configuration["Db:ConnectionString"];
+			var connectionString = Configuration.GetWithReplacement("Db:ConnectionString");
 			if(string.IsNullOrWhiteSpace(connectionString))
 			{
 				throw new ArgumentNullException("Db:ConnectionString", "Db:ConnectionString is required");
 			}
-
-			connectionString = ReplacementRegex.Replace(connectionString, (Match target) =>
-			{
-				if(target.Groups.ContainsKey("key"))
-				{
-					var group = target.Groups["key"];
-					return Configuration[group.Value];
-				}
-
-				return target.Value;
-			});
 
 			services.AddDbContext<ApplicationDbContext>(options => {
 				switch (Configuration["Db:Provider"])
