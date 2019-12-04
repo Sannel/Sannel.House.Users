@@ -1,5 +1,5 @@
-ARG tag=3.0
-ARG sdk_tag=3.0
+ARG tag=3.1
+ARG sdk_tag=3.1
 FROM mcr.microsoft.com/dotnet/core/aspnet:${tag} AS base
 WORKDIR /app
 EXPOSE 8080
