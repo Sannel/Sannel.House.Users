@@ -36,8 +36,8 @@ using System.Text;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
-using Sannel.House.Data;
-using Sannel.House.Web;
+using Sannel.House.Base.Data;
+using Sannel.House.Base.Web;
 using Microsoft.Extensions.Hosting;
 using System.Text.RegularExpressions;
 
