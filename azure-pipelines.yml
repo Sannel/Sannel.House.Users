@@ -22,8 +22,6 @@ variables:
 name: $(date:yyyy.MM.dd)$(rev:.rr)
 
 jobs:
-- template: build/tasks/osx.yaml
-
 - template: build/tasks/linux-arm.yaml
   parameters:
     arch: arm32
