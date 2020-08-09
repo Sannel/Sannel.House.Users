@@ -40,6 +40,7 @@ using Sannel.House.Base.Data;
 using Sannel.House.Base.Web;
 using Microsoft.Extensions.Hosting;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace Sannel.House.Users
 {
@@ -114,7 +115,7 @@ namespace Sannel.House.Users
 
 			services.AddControllers();
 
-			services.AddIdentityServer(i =>
+			var identityBuilder = services.AddIdentityServer(i =>
 			{
 				// documents for adding more options: http://docs.identityserver.io/en/latest/reference/options.html
 				if(!string.IsNullOrWhiteSpace(Configuration["IdentityServer:IssuerUri"]))
@@ -132,10 +133,6 @@ namespace Sannel.House.Users
 					i.AccessTokenJwtType = Configuration["IdentityServer:AccessTokenJwtType"];
 				}
 			})
-				.AddSigningCredential(
-					new X509Certificate2(
-						Configuration["IdentityServer:Certificate:Path"],
-						Configuration["IdentityServer:Certificate:Password"]))
 				.AddConfigurationStore(options =>
 				{
 					options.ConfigureDbContext = options =>
@@ -194,6 +191,27 @@ namespace Sannel.House.Users
 					options.TokenCleanupInterval = 3600;
 				})
 				.AddAspNetIdentity<IdentityUser>();
+
+			switch (Configuration["IdentityServer:SigningCredentialType"]?.ToLowerInvariant())
+			{
+				case "ecdsa":
+					var bytes = Convert.FromBase64String(Configuration["IdentityServer:ECDsa:Key"]);
+
+					var ecdsa = ECDsa.Create();
+					ecdsa.ImportECPrivateKey(bytes, out _);
+
+					var securityKey = new ECDsaSecurityKey(ecdsa) {KeyId = Configuration["IdentityServer:ECDsa:KeyId"]};
+
+					identityBuilder.AddSigningCredential(securityKey, IdentityServerConstants.ECDsaSigningAlgorithm.ES256);
+					break;
+				case "x509":
+				default:
+					identityBuilder.AddSigningCredential(
+						new X509Certificate2(
+							Configuration["IdentityServer:X509:Path"],
+							Configuration["IdentityServer:X509:Password"]));
+					break;
+			}
 
 			services.AddScoped<DataSeeder>();
 			services.AddHealthChecks();
