@@ -41,6 +41,7 @@ using Sannel.House.Base.Web;
 using Microsoft.Extensions.Hosting;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Builder;
 
 namespace Sannel.House.Users
 {
@@ -214,7 +215,11 @@ namespace Sannel.House.Users
 			}
 
 			services.AddScoped<DataSeeder>();
-			services.AddHealthChecks();
+			services.AddHealthChecks()
+				.AddDbHealthCheck<ApplicationDbContext>("ApplicationDb", async (c) =>
+				{
+					await c.Users.AnyAsync();
+				});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -254,7 +259,7 @@ namespace Sannel.House.Users
 				//app.UseHsts();
 			}
 
-			app.UseHealthChecks("/health");
+			app.UseHouseHealthChecks("/health");
 
 			//app.UseHttpsRedirection();
 

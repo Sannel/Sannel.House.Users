@@ -24,14 +24,14 @@
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.1.4" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="3.1.4" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" PrivateAssets="All" />
 	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
 	  <PackageReference Include="Sannel.House.Base.Data" Version="0.9.420-beta" />
-	  <PackageReference Include="Sannel.House.Base.Web" Version="0.9.436-beta" />
+	  <PackageReference Include="Sannel.House.Base.Web" Version="0.9.458-beta" />
   </ItemGroup>
 
   <ItemGroup>
