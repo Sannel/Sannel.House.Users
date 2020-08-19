@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -31,7 +31,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" PrivateAssets="All" />
 	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
 	  <PackageReference Include="Sannel.House.Base.Data" Version="0.9.420-beta" />
-	  <PackageReference Include="Sannel.House.Base.Web" Version="0.9.458-beta" />
+	  <PackageReference Include="Sannel.House.Base.Web" Version="0.9.466-beta" />
   </ItemGroup>
 
   <ItemGroup>

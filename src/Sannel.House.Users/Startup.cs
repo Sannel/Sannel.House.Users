@@ -269,6 +269,8 @@ namespace Sannel.House.Users
 
 			app.UseCors();
 
+			app.UseHouseRobotsTxt();
+
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
