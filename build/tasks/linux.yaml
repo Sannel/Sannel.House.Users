@@ -91,7 +91,7 @@ jobs:
         containerregistrytype: 'Container Registry'
         dockerRegistryConnection: 'Docker Hub'
         dockerFile: '$(Build.StagingDirectory)/Dockerfile'
-        buildArguments: 'tag=$(tagVersion)'
+        buildArguments: 'tag=$(tagVersion)-$(tagCodeName)'
         defaultContext: false
         context: '$(Build.StagingDirectory)'
         imageName: '$(imageName)-linux-x64'

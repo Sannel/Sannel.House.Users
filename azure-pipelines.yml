@@ -12,12 +12,12 @@ variables:
   mainProjectPath: src/$(projectFolder)/$(projectFolder).csproj
   mainConfigPath: src/$(projectFolder)/app_config
   tagVersion: 3.1
-  tagCodeName: buster
+  tagCodeName: alpine
   hasTests: false
   disableLinux: false
   disableArm64: false
-  disableWindows: false
-  disableOSX: false
+  disableWindows: true
+  disableOSX: true
 
 name: $(date:yyyy.MM.dd)$(rev:.rr)
 

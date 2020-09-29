@@ -259,8 +259,6 @@ namespace Sannel.House.Users
 				//app.UseHsts();
 			}
 
-			app.UseHouseHealthChecks("/health");
-
 			//app.UseHttpsRedirection();
 
 			app.UseIdentityServer();
@@ -269,10 +267,10 @@ namespace Sannel.House.Users
 
 			app.UseCors();
 
-			app.UseHouseRobotsTxt();
-
 			app.UseEndpoints(endpoints =>
 			{
+				endpoints.MapHouseRobotsTxt();
+				endpoints.MapHouseHealthChecks("/health");
 				endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 			});
 
