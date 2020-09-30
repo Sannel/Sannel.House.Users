@@ -54,7 +54,7 @@ jobs:
         command: custom
         projects: '**/*Tests.csproj'
         custom: restore
-        arguments: '-r linux-x64 --configfile .nuget/nuget.config'
+        arguments: '-r linux-musl-x64 --configfile .nuget/nuget.config'
         feedsToUse: config
         nugetConfigPath: .nuget/nuget.config
         externalFeedCredentials: 'Sannel House MyGet'

@@ -1,6 +1,6 @@
 ARG tag=3.0
 ARG tagCodeName=alpine
-FROM mcr.microsoft.com/dotnet/core/aspnet:${tag}-${tagCodeName}-arm64v8 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:${tag}-buster-slim-arm64v8 AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8443
