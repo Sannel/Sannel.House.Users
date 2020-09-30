@@ -7,7 +7,7 @@ COPY qemu-arm-static /usr/bin/
 COPY Sannel.House.Users/ .
 RUN ln -s  /var/run/secrets/kubernetes.io/serviceaccount/ca.crt /etc/ssl/certs/kubernetes.pem \
     && addgroup -g 1200 house \
-    && adduser -u 1200 -G house house \
+    && adduser -u 1200 -G house -D house \
     && chown -R house:house /app \
     && rm -f /usr/bin/qemu-arm-static
 USER 1200
