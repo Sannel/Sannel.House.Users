@@ -7,8 +7,8 @@ EXPOSE 8443
 COPY qemu-aarch64-static /usr/bin/
 COPY Sannel.House.Users/ .
 RUN ln -s  /var/run/secrets/kubernetes.io/serviceaccount/ca.crt /etc/ssl/certs/kubernetes.pem \
-    && addgroup -g 1200 house \
-    && adduser -u 1200 -G house -D house \
+    && addgroup --gid 1200 house \
+    && useradd --uid 1200 --gid house house \
     && chown -R house:house /app \
     && rm -f /usr/bin/qemu-aarch64-static
 USER 1200
