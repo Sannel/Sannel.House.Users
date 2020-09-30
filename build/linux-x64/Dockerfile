@@ -5,8 +5,8 @@ EXPOSE 8080
 EXPOSE 8443
 COPY Sannel.House.Users/ .
 RUN ln -s  /var/run/secrets/kubernetes.io/serviceaccount/ca.crt /etc/ssl/certs/kubernetes.pem \
-    && groupadd -g 1200 house \
-    && useradd -m house -u 1100 -g 1200 \
+    && addgroup -g 1200 house \
+    && adduser -u 1100 -G 1200 house \
     && chown -R house:house /app
 USER 1200
 ENTRYPOINT ["dotnet", "Sannel.House.Users.dll"]
