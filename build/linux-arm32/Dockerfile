@@ -1,5 +1,6 @@
 ARG tag=3.0
-FROM mcr.microsoft.com/dotnet/core/aspnet:${tag} AS base
+ARG tagCodeName=buster-slim
+FROM mcr.microsoft.com/dotnet/core/aspnet:${tag}-buster-slim-arm32v7 AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8443
