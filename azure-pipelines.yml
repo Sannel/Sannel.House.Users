@@ -8,7 +8,7 @@ pr:
 - feature/*
 
 variables:
-  sdk_version: 5.0.x
+  sdk_version: 3.1.x
   sdk_support_preview: true
   dockerRepositoryRoot: sannel
   dockerTagBase: $(Build.SourceBranchName)-$(Build.BuildId)
@@ -16,7 +16,7 @@ variables:
   repositoryName: Sannel.House.Users
   imageTag: $(Build.SourceBranchName)-$(Build.BuildId)
   projectFolder: Sannel.House.Users
-  tagVersion: 5.0
+  tagVersion: 3.1
   tagCodeName: buster
   hasTests: true
   Major: 0
@@ -24,10 +24,6 @@ variables:
 
 resources:
   repositories:
-    - repository: users
-      type: github
-      name: Sannel/Sannel.House.Users
-      endpoint: Sannel
     - repository: templates
       type: github
       name: Sannel/Sannel.House.BuildScripts
