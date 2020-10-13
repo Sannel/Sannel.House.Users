@@ -18,7 +18,7 @@ variables:
   projectFolder: Sannel.House.Users
   tagVersion: 3.1
   tagCodeName: buster
-  hasTests: true
+  hasTests: false
   Major: 0
   Minor: 9
 
