@@ -77,6 +77,7 @@ Logging:
     System: Information
     Microsoft: Information
 IdentityServer:
+#  PublicOrigin: https://test.com
   SigningCredentialType: ecdsa
   ECDsa:
     Key: MHcCAQEEIGm1KV4Mow5wxBT9ee2k8nYIqnvczyvRmXZSsUk+tiBGoAoGCCqGSM49AwEHoUQDQgAEqcdqV5OWwM25DKXgN8cq5W0wrhcM9ghg7vXwDUEAinKkOYiZRxeKQEdof+Gb1J4mzraA4wQbnavdqMTLRkh92A==

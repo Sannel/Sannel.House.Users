@@ -245,12 +245,6 @@ namespace Sannel.House.Users
 
 			//app.UseHttpsRedirection();
 
-			app.UseIdentityServer();
-
-			app.UseRouting();
-
-			app.UseCors();
-
 			var pOrigin = Configuration["IdentityServer:PublicOrigin"];
 			if (Uri.TryCreate(pOrigin, UriKind.Absolute, out var publicOrigin))
 			{
@@ -273,6 +267,13 @@ namespace Sannel.House.Users
 			{
 				logger.LogDebug("Public Origin is not set or is incorrect {PublicOrigin}", Configuration["IdentityServer:PublicOrigin"]);
 			}
+
+			app.UseIdentityServer();
+
+			app.UseRouting();
+
+			app.UseCors();
+
 
 			app.UseEndpoints(endpoints =>
 			{
