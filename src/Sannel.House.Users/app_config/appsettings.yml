@@ -4,6 +4,13 @@ Db:
   ConnectionString: Data Source=app_data/data.db
   SeedDb: true
   DbSeed:
+    Scopes:
+    - Name: openid
+      DisplayName: Your user identifier
+      Required: true
+    - Name: sensors
+      DisplayName: Log and read sensor data
+      Required: false
     ApiResources:
     - Name: openid
       DisplayName: Your user identifier
@@ -12,18 +19,14 @@ Db:
       - Type: sub
       - Type: role
       Scopes:
-      - Name: openid
-        DisplayName: Your user identifier
-        Required: true
+      - Scope: openid
     - Name: houseapi
       DisplayName: Api for House Automation
       Enabled: true
       UserClaims:
       - Type: role
       Scopes:
-      - Name: sensors
-        DisplayName: Log and read sensor data
-        Required: false
+      - Scope: sensors
     Clients:
     - ClientId: test-client
       ClientName: Test Client
