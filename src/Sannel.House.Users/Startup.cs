@@ -1,4 +1,4 @@
-/* Copyright 2019 Sannel Software, L.L.C.
+/* Copyright 2019-2020 Sannel Software, L.L.C.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
@@ -8,16 +8,12 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.*/
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sannel.House.Users.Data;
 using Microsoft.Extensions.Configuration;
@@ -26,22 +22,14 @@ using Sannel.House.Users.Data.Sqlite;
 using Sannel.House.Users.Data.SqlServer;
 using Sannel.House.Users.Data.PostgreSQL;
 using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.AccessTokenValidation;
 using IdentityServer4;
-using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.EntityFramework.Stores;
-using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
-using System.Data.Common;
 using Sannel.House.Base.Data;
 using Sannel.House.Base.Web;
 using Microsoft.Extensions.Hosting;
-using System.Text.RegularExpressions;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Builder;
 
 namespace Sannel.House.Users
 {
@@ -74,12 +62,6 @@ namespace Sannel.House.Users
 		/// <param name="services">The services.</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			//services.Configure<CookiePolicyOptions>(options =>
-			//{
-			//	// This lambda determines whether user consent for non-essential cookies is needed for a given request.
-			//	options.CheckConsentNeeded = context => true;
-			//	options.MinimumSameSitePolicy = SameSiteMode.None;
-			//});
 
 			var connectionString = Configuration.GetWithReplacement("Db:ConnectionString");
 			if(string.IsNullOrWhiteSpace(connectionString))
@@ -88,18 +70,15 @@ namespace Sannel.House.Users
 			}
 
 			services.AddDbContext<ApplicationDbContext>(options => {
-				switch (Configuration["Db:Provider"])
+				switch (Configuration["Db:Provider"]?.ToLowerInvariant())
 				{
 					case "sqlserver":
-					case "SqlServer":
 						options.ConfigureSqlServer(connectionString);
 						break;
-					case "MySql":
 					case "mysql":
 						//options.ConfigureMySql(Configuration["Db:ConnectionString"]);
 						throw new NotSupportedException("We are currently not supporting mysql as a db provider");
 
-					case "PostgreSQL":
 					case "postgresql":
 						options.ConfigurePostgreSQL(connectionString);
 						break;
@@ -124,11 +103,6 @@ namespace Sannel.House.Users
 					i.IssuerUri = Configuration["IdentityServer:IssuerUri"];
 				}
 
-				if (!string.IsNullOrWhiteSpace(Configuration["IdentityServer:PublicOrigin"]))
-				{
-					i.PublicOrigin = Configuration["IdentityServer:PublicOrigin"];
-				}
-
 				if(!string.IsNullOrWhiteSpace(Configuration["IdentityServer:AccessTokenJwtType"]))
 				{
 					i.AccessTokenJwtType = Configuration["IdentityServer:AccessTokenJwtType"];
@@ -138,18 +112,15 @@ namespace Sannel.House.Users
 				{
 					options.ConfigureDbContext = options =>
 					{
-						switch (Configuration["Db:Provider"])
+						switch (Configuration["Db:Provider"]?.ToLowerInvariant())
 						{
 							case "sqlserver":
-							case "SqlServer":
 								options.ConfigureSqlServer(connectionString);
 								break;
-							case "MySql":
 							case "mysql":
 								//options.ConfigureMySql(Configuration["Db:ConnectionString"]);
 								throw new NotSupportedException("We are currently not supporting mysql as a db provider");
 
-							case "PostgreSQL":
 							case "postgresql":
 								options.ConfigurePostgreSQL(connectionString);
 								break;
@@ -165,18 +136,15 @@ namespace Sannel.House.Users
 				{
 					options.ConfigureDbContext = options =>
 					{
-						switch (Configuration["Db:Provider"])
+						switch (Configuration["Db:Provider"]?.ToLowerInvariant())
 						{
 							case "sqlserver":
-							case "SqlServer":
 								options.ConfigureSqlServer(connectionString);
 								break;
-							case "MySql":
 							case "mysql":
 								//options.ConfigureMySql(Configuration["Db:ConnectionString"]);
 								throw new NotSupportedException("We are currently not supporting mysql as a db provider");
 
-							case "PostgreSQL":
 							case "postgresql":
 								options.ConfigurePostgreSQL(connectionString);
 								break;
@@ -230,6 +198,11 @@ namespace Sannel.House.Users
 			{
 				var db = provider.GetService<ApplicationDbContext>();
 
+				if(db is null)
+				{
+					throw new Exception("Unable to get ApplicationDbContext from service provider");
+				}
+
 				if (/*string.Compare(p, "mysql", true) == 0
 					||*/ string.Compare(p, "sqlserver", true) == 0
 					|| string.Compare(p, "postgresql", true) == 0)
@@ -241,17 +214,28 @@ namespace Sannel.House.Users
 			}
 			{
 				var db = provider.GetService<ConfigurationDbContext>();
+
+				if(db is null)
+				{
+					throw new Exception("Unable to get ConfigurationDbContext from service provider");
+				}
+
 				db.Database.Migrate();
 			}
 			{
 				var db = provider.GetService<PersistedGrantDbContext>();
+
+				if(db is null)
+				{
+					throw new Exception("Unable to get PersistedGrantDbContext from service provider");
+				}
+
 				db.Database.Migrate();
 			}
 
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-//				app.UseDatabaseErrorPage();
 			}
 			else
 			{
@@ -261,11 +245,35 @@ namespace Sannel.House.Users
 
 			//app.UseHttpsRedirection();
 
+			var pOrigin = Configuration["IdentityServer:PublicOrigin"];
+			if (Uri.TryCreate(pOrigin, UriKind.Absolute, out var publicOrigin))
+			{
+				// add public origin back
+				app.Use((context, next) =>
+				{
+					context.Request.Scheme = publicOrigin.Scheme;
+					if (publicOrigin.Port != 80 && publicOrigin.Port != 443)
+					{
+						context.Request.Host = new HostString(publicOrigin.GetComponents(UriComponents.HostAndPort, UriFormat.Unescaped));
+					}
+					else
+					{
+						context.Request.Host = new HostString(publicOrigin.Host);
+					}
+					return next();
+				});
+			}
+			else if(logger.IsEnabled(LogLevel.Debug))
+			{
+				logger.LogDebug("Public Origin is not set or is incorrect {PublicOrigin}", Configuration["IdentityServer:PublicOrigin"]);
+			}
+
 			app.UseIdentityServer();
 
 			app.UseRouting();
 
 			app.UseCors();
+
 
 			app.UseEndpoints(endpoints =>
 			{
@@ -277,6 +285,12 @@ namespace Sannel.House.Users
 			if (Configuration.GetValue<bool>("Db:SeedDb"))
 			{
 				var s = provider.GetService<DataSeeder>();
+
+				if(s is null)
+				{
+					throw new Exception("Unable to get DataSeeder from service provider");
+				}
+
 				s.SeedData();
 			}
 

@@ -41,9 +41,20 @@ namespace Sannel.House.Users
 		{
 			using (var scope = provider.CreateScope())
 			{
-				var configContext = scope.ServiceProvider.GetService<ConfigurationDbContext>();
-				var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-				var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+				var configContext = scope.ServiceProvider.GetService<ConfigurationDbContext>() ?? throw new Exception("ConfigurationDbContext not found in service provider");
+				var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>() ?? throw new Exception("RoleManager<IdentityRole> not found in service provider");
+				var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>() ?? throw new Exception("UserManager<IdentityUser> not found in service provider");
+
+				var scopesSection = configuration.GetSection("Db:DbSeed:Scopes");
+				var scopesList = scopesSection.Get<List<ApiScope>>();
+				foreach(var apiScope in scopesList)
+				{
+					if(!configContext.ApiScopes.Where(i => i.Name == apiScope.Name).Any())
+					{
+						logger.LogDebug("Adding scope {Name}", apiScope.Name);
+						await configContext.AddAsync(apiScope);
+					}
+				}
 
 				var apiSection = configuration.GetSection("Db:DbSeed:ApiResources");
 				var apiList = apiSection.Get<List<ApiResource>>();
@@ -51,7 +62,7 @@ namespace Sannel.House.Users
 				{
 					if (configContext.ApiResources.Count(i => i.Name == api.Name) == 0)
 					{
-						logger.LogDebug("Adding api resource {0}", api.Name);
+						logger.LogDebug("Adding api resource {Name}", api.Name);
 						await configContext.ApiResources.AddAsync(api);
 					}
 				}
