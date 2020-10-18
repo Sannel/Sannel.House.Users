@@ -1,9 +1,0 @@
-version: '3.6'
-
-services:
-  users:
-    build:
-      dockerfile: obj/Dockerfile
-#    volumes:
-#      - "./src/Sannel.House.Users/app_config:/app/app_config"
-#      - "./src/Sannel.House.Users/app_data:/app/app_data"

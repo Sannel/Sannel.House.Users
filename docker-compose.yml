@@ -7,5 +7,17 @@ services:
       context: .
       dockerfile: src/Sannel.House.Users/Dockerfile
     ports:
-      - "8443:8443"
-      - "8080:8080"
+      - "8181:8181"
+    hostname: "users.dev.local"
+    volumes:
+    - "./src/Sannel.House.Users/app_config/appsettings.yml:/app/app_config/appsettings.yml"
+    - "./src/Sannel.House.Users/app_data:/app/app_data/"
+    networks: 
+      housenet:
+        aliases:
+          - "users.localtest.me"
+          - "users.dev.local"
+
+
+networks:
+  housenet:
