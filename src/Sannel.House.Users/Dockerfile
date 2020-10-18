@@ -1,19 +1,18 @@
-ARG tag=3.1
-ARG sdk_tag=3.1
-FROM mcr.microsoft.com/dotnet/core/aspnet:${tag} AS base
+ARG tag=5.0
+ARG sdk_tag=5.0
+FROM mcr.microsoft.com/dotnet/aspnet:${tag} AS base
 WORKDIR /app
-EXPOSE 8080
+EXPOSE 8181
 EXPOSE 8443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:${sdk_tag} AS build
+FROM mcr.microsoft.com/dotnet/sdk:${sdk_tag} AS build
 WORKDIR /src
 COPY [".nuget/nuget.config", ".nuget/nuget.config"]
 COPY ["Directory.Build.props", "./"]
 COPY ["src/Sannel.House.Users/Sannel.House.Users.csproj", "src/Sannel.House.Users/"]
-COPY ["src/Migrations/Sannel.House.Users.Data.Sqlite/Sannel.House.Users.Data.Sqlite.csproj", "src/Migrations/Sannel.House.Users.Data.Sqlite/"]
 COPY ["src/Sannel.House.Users.Data/Sannel.House.Users.Data.csproj", "src/Sannel.House.Users.Data/"]
+COPY ["src/Migrations/Sannel.House.Users.Data.Sqlite/Sannel.House.Users.Data.Sqlite.csproj", "src/Migrations/Sannel.House.Users.Data.Sqlite/"]
 COPY ["src/Migrations/Sannel.House.Users.Data.SqlServer/Sannel.House.Users.Data.SqlServer.csproj", "src/Migrations/Sannel.House.Users.Data.SqlServer/"]
-COPY ["src/Migrations/Sannel.House.Users.Data.MySql/Sannel.House.Users.Data.MySql.csproj", "src/Migrations/Sannel.House.Users.Data.MySql/"]
 COPY ["src/Migrations/Sannel.House.Users.Data.PostgreSQL/Sannel.House.Users.Data.PostgreSQL.csproj", "src/Migrations/Sannel.House.Users.Data.PostgreSQL/"]
 RUN dotnet restore --configfile .nuget/nuget.config "src/Sannel.House.Users/Sannel.House.Users.csproj"
 COPY . .

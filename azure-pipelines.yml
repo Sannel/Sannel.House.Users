@@ -8,15 +8,15 @@ pr:
 - feature/*
 
 variables:
-  sdk_version: 3.1.x
-  sdk_support_preview: false
+  sdk_version: 5.0.x
+  sdk_support_preview: true
   dockerRepositoryRoot: sannel
   dockerTagBase: $(Build.SourceBranchName)-$(Build.BuildId)
   mainImageName: house.users
   repositoryName: Sannel.House.Users
   imageTag: $(Build.SourceBranchName)-$(Build.BuildId)
   projectFolder: Sannel.House.Users
-  tagVersion: 3.1
+  tagVersion: 5.0
   tagCodeName: buster
   hasTests: false
   Major: 0

@@ -1,5 +1,4 @@
 ---
-https_port: 443
 Db:
   Provider: sqlite
   ConnectionString: Data Source=app_data/data.db
@@ -79,20 +78,11 @@ IdentityServer:
   ECDsa:
     Key: MHcCAQEEIGm1KV4Mow5wxBT9ee2k8nYIqnvczyvRmXZSsUk+tiBGoAoGCCqGSM49AwEHoUQDQgAEqcdqV5OWwM25DKXgN8cq5W0wrhcM9ghg7vXwDUEAinKkOYiZRxeKQEdof+Gb1J4mzraA4wQbnavdqMTLRkh92A==
     KeyId: hQPOjrNxT7u4oZrF7HdHD0tIL
-  X509:
-    Path: app_config/adamholt.us.pfx
-    Password: "D9sPIrxqwfQoW0XEw3SZ"
+#  X509:
+#    Path: app_config/adamholt.us.pfx
+#    Password: "D9sPIrxqwfQoW0XEw3SZ"
+
 Kestrel:
   Endpoints:
-    HTTPS:
-      Url: https://*:8433
-      Certificate:
-        Path: app_config/house.dev.local.pfx
-        Password: "@Password1"
     HTTP:
-      Url: http://*:8080
-  Certificate:
-#    Path: app_config/house.dev.local.pfx
-#    Password: "@Password1"
-    Path: app_config/adamholt.us.pfx
-    Password: "D9sPIrxqwfQoW0XEw3SZ"
+      Url: http://*:8181

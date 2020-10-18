@@ -1,26 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.1.4" />
-    <PackageReference Include="IdentityServer4.EntityFramework" Version="3.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.1.4" />
+		<PackageReference Include="IdentityServer4.EntityFramework" Version="3.1.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0-rc.*">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0-rc2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Sannel.House.Users.Data\Sannel.House.Users.Data.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Sannel.House.Users.Data\Sannel.House.Users.Data.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\IdentityServer\ConfigurationDb\" />
-    <Folder Include="Migrations\IdentityServer\PersistedGrantDb\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Migrations\IdentityServer\ConfigurationDb\" />
+		<Folder Include="Migrations\IdentityServer\PersistedGrantDb\" />
+	</ItemGroup>
 
 </Project>
