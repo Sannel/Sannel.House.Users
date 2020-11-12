@@ -20,11 +20,11 @@
 		<PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.1" />
 		<PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.1" />
 		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0-rc.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0-rc.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0-rc.*" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.*" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0-rc.*" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.*" PrivateAssets="All" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0-rc2" />
 		<PackageReference Include="Sannel.House.Base.Data" Version="0.9.556-beta" />
 		<PackageReference Include="Sannel.House.Base.Web" Version="0.9.642-beta" />
